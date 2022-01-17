@@ -1,0 +1,97 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>at.homebrew.tvbrowser.zattooplugin</groupId>
+    <artifactId>ZattooPlugin</artifactId>
+    <version>1.0.3.0</version>
+    <packaging>jar</packaging>
+    <name>ZattooPlugin</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.tvbrowser</groupId>
+            <artifactId>tvbrowser</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jgoodies</groupId>
+            <artifactId>jgoodies-common</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jgoodies</groupId>
+            <artifactId>jgoodies-forms</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jgoodies</groupId>
+            <artifactId>jgoodies-looks</artifactId>
+            <version>2.5.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <finalName>${project.name}</finalName>
+                            <descriptors>
+                                <descriptor>${basedir}/distribute.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                        <configuration>
+                            <finalName>${project.name}.jar</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+    <developers>
+        <developer>
+            <id>dstockhausen</id>
+            <name>Dieter Stockhausen</name>
+            <email>dstockhausen@techsoft.at</email>
+        </developer>
+    </developers>
+
+</project>
