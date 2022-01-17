@@ -2,7 +2,6 @@ package zattooplugin;
 
 import devplugin.*;
 import util.browserlauncher.Launch;
-import util.exc.ErrorHandler;
 import util.io.ExecutionHandler;
 import util.io.IOUtilities;
 import util.misc.OperatingSystem;
@@ -11,7 +10,6 @@ import util.ui.Localizer;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
@@ -22,7 +20,7 @@ public final class ZattooPlugin extends Plugin {
    private static final String ICON_NAME = "zattoo";
    private static final String ICON_CATEGORY = "apps";
    private static final boolean PLUGIN_IS_STABLE = true;
-   private static final Version PLUGIN_VERSION = new Version(1, 3, 0, true);
+   private static final Version PLUGIN_VERSION = new Version(1, 3, 1, true);
    private static final Localizer mLocalizer = Localizer.getLocalizerFor(ZattooPlugin.class);
    private static final Logger mLog = Logger.getLogger(ZattooPlugin.class.getName());
    private ImageIcon mIcon;
@@ -65,7 +63,10 @@ public final class ZattooPlugin extends Plugin {
    }
 
    public PluginInfo getInfo() {
-      return new PluginInfo(ZattooPlugin.class, mLocalizer.msg("pluginName", "Zattoo"), mLocalizer.msg("description", "Switches channels in Zattoo"), "Bodo Tasche, Michael Keppler", "GPL");
+      return new PluginInfo(ZattooPlugin.class,
+              mLocalizer.msg("pluginName", "Zattoo"),
+              mLocalizer.msg("description", "Switches channels in Zattoo"),
+              mLocalizer.msg("author", "Bodo Tasche, Michael Keppler, since 1.0.3.0 Dieter Stockhausen"), "GPL");
    }
 
    public SettingsTab getSettingsTab() {
@@ -131,31 +132,8 @@ public final class ZattooPlugin extends Plugin {
       if (id != null) {
          String url = "http://zattoo.com/watch/" + id;
          ExecutionHandler executionHandler = null;
-         if (this.mSettings.getUseWebPlayer()) {
             mLog.log(Level.INFO,"Open URL " + url);
             Launch.openURL(url);
-         } else if (this.mSettings.getUsePrismPlayer()) {
-            executionHandler = new ExecutionHandler("-uri " + url + " -name tvbrowser-zattoo", "prism");
-         } else {
-            String zattooURI = "zattoo://channel/" + id;
-            if (OperatingSystem.isLinux()) {
-               executionHandler = new ExecutionHandler(zattooURI, "zattoo-uri-handler");
-            } else if (OperatingSystem.isMacOs()) {
-               executionHandler = new ExecutionHandler(zattooURI, "open");
-            } else {
-               executionHandler = new ExecutionHandler(new String[]{"rundll32.exe", "url.dll,FileProtocolHandler", zattooURI});
-            }
-         }
-
-         if (executionHandler != null) {
-            try {
-               executionHandler.execute(false);
-            } catch (IOException var6) {
-               var6.printStackTrace();
-               ErrorHandler.handle(mLocalizer.msg("error.zatto", "Could not start zattoo"), var6);
-            }
-         }
-
       }
    }
 
@@ -166,12 +144,11 @@ public final class ZattooPlugin extends Plugin {
          return null;
       } else {
          int comma = id.indexOf(44);
-         if (!this.mSettings.getUseLocalPlayer() && comma >= 0) {
+         // Support old  property format
+         if (comma >= 0) {
             return id.substring(comma + 1).trim();
-         } else if (!this.mSettings.getUseLocalPlayer() && comma == -1) {
-            return null;
          } else {
-            return comma >= 0 ? id.substring(0, comma) : id;
+            return id;
          }
       }
    }
