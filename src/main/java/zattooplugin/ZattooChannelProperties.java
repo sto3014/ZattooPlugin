@@ -1,9 +1,9 @@
 package zattooplugin;
 
-public class ZattooChannelProperties extends ChannelProperties {
-   //private ZattooSettings mSettings;
+import java.io.File;
 
-   public ZattooChannelProperties(String fileName, ZattooSettings zattooSettings) {
+public class ZattooChannelProperties extends ChannelProperties {
+   public ZattooChannelProperties(String fileName) {
       super(fileName);
    }
 
