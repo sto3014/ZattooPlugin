@@ -20,7 +20,7 @@ public final class ZattooPlugin extends Plugin {
     private static final String ICON_NAME = "zattoo";
     private static final String ICON_CATEGORY = "apps";
     private static final boolean PLUGIN_IS_STABLE = true;
-    private static final Version PLUGIN_VERSION = new Version(1, 3, 1, true);
+    private static final Version PLUGIN_VERSION = new Version(1, 4, 0, true);
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(ZattooPlugin.class);
     private static final Logger mLog = Logger.getLogger(ZattooPlugin.class.getName());
     private ImageIcon mIcon;
@@ -33,7 +33,7 @@ public final class ZattooPlugin extends Plugin {
     private ThemeIcon mThemeIcon;
     private Timer mTimer;
     private ProgramReceiveTarget mProgramReceiveTarget;
-    private static CustomChannelProperties channelLogger = null;
+    private static CustomChannelProperties customChannelProperties = null;
 
     public ZattooPlugin() {
         this.mProgramReceiveTarget = new ProgramReceiveTarget(this, mLocalizer.msg("receiveTarget", "Show on Zattoo"), "ZATTOO_TARGET");
@@ -54,17 +54,23 @@ public final class ZattooPlugin extends Plugin {
     }
 
     public void changeCountry(String country) {
-        try {
-            this.mChannelIds = new ZattooChannelProperties("channels_" + country);
-            this.mSettings.setCountry(country);
-        } catch (Exception var3) {
-            mLog.log(Level.WARNING, "Could not load File for Country " + country + ".", var3);
-        }
-
+        this.mSettings.setCountry(country);
+        this.mChannelIds = new ZattooChannelProperties(this.mSettings);
     }
 
     public void changeLearnMode(boolean learnMode) {
         this.mSettings.setLearnMode(learnMode);
+        this.mChannelIds = new ZattooChannelProperties(this.mSettings);
+    }
+
+    public void changeCustomChannelProperties(String customChannelProperties) {
+        this.mSettings.setCustomChannelProperties(customChannelProperties);
+        this.mChannelIds = new ZattooChannelProperties(this.mSettings);
+    }
+
+    public void changeRereadCustomChannelProperties(boolean reread) {
+        this.mSettings.setRereadCustomChannelProperties(reread);
+        this.mChannelIds = new ZattooChannelProperties(this.mSettings);
     }
 
     public PluginInfo getInfo() {
@@ -147,7 +153,6 @@ public final class ZattooPlugin extends Plugin {
         String id = this.mChannelIds.getProperty(channel);
         if (id == null) {
             mLog.log(Level.INFO, "No zattoo channel mapping found for " + channel.getUniqueId());
-            logChannel(channel);
             return null;
         } else {
             int comma = id.indexOf(44);
@@ -155,7 +160,6 @@ public final class ZattooPlugin extends Plugin {
             if (comma >= 0) {
                 id = id.substring(comma + 1).trim();
             }
-            logChannel(channel, id);
             return id;
         }
     }
@@ -287,19 +291,16 @@ public final class ZattooPlugin extends Plugin {
         return this.isChannelSupported(program.getChannel()) && !program.isExpired() && !program.isOnAir();
     }
 
-    private void logChannel(Channel channel) {
-        if (mSettings.isLearnMode() && !mSettings.getCountry().contains("custom")) {
-            if (channelLogger == null)
-                channelLogger = new CustomChannelProperties("channels_custom.properties");
-            channelLogger.setChannel(channel);
-        }
-    }
 
-    private void logChannel(Channel channel, String zattooChannel) {
-        if (mSettings.isLearnMode() && !mSettings.getCountry().contains("custom")) {
-            if (channelLogger == null)
-                channelLogger = new CustomChannelProperties("channels_custom.properties");
-            channelLogger.setChannel(channel, zattooChannel);
+    public void setCustomChannels(Channel[] channels) {
+        if (customChannelProperties == null)
+            customChannelProperties = new CustomChannelProperties(mSettings);
+        customChannelProperties.clear(false);
+        for (Channel channel : channels) {
+            String id = this.getChannelId(channel);
+            String zattooChannel = (id == null) ? "" : id;
+            customChannelProperties.setChannel(channel, zattooChannel);
         }
+        customChannelProperties.storePropertyFile();
     }
 }

@@ -11,26 +11,23 @@ public abstract class ChannelProperties {
     protected Properties mProperties;
     protected boolean isCustom;
     protected boolean hasErrors = false;
+    private ZattooSettings mSettings;
 
-    protected ChannelProperties() {
-        this("channels.properties");
-    }
-
-    protected ChannelProperties(String fileName) {
-        isCustom = fileName.contains("custom");
-
-        this.mFileName = fileName;
-        if (!this.mFileName.toLowerCase().endsWith(".properties")) {
-            this.mFileName = this.mFileName + ".properties";
-        }
+    protected ChannelProperties(ZattooSettings settings) {
+        this.mSettings = settings;
+        isCustom = this.mSettings.getCountry().equals("custom");
+        if (isCustom) {
+            this.mFileName = this.mSettings.getCustomChannelProperties();
+        } else
+            this.mFileName = "channels_" + this.mSettings.getCountry() + ".properties";
     }
 
     private void initializeProperties() {
-        if (this.mProperties == null) {
+        if (this.mProperties == null || ( isCustom && mSettings.isRereadCustomChannelProperties())) {
             InputStream stream;
             if (isCustom) {
                 try {
-                    stream = new FileInputStream(Helper.getPropertyPath() + this.mFileName);
+                    stream = new FileInputStream(this.mFileName);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     hasErrors = true;
@@ -55,7 +52,7 @@ public abstract class ChannelProperties {
     protected abstract void checkProperties();
 
     public String getProperty(Channel channel) {
-        if ( hasErrors)
+        if (hasErrors)
             return null;
         try {
             this.initializeProperties();
