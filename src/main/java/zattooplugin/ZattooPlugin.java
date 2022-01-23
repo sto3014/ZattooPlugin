@@ -57,13 +57,17 @@ public final class ZattooPlugin extends Plugin {
         mSettings.setCountry(country);
         mChannelIds = new ZattooChannelProperties(mSettings);
     }
+
+    public void changeSourceCountry(String sourceCountry) {
+        mSettings.setSourceCountry(sourceCountry);
+    }
+
     public void changeUpdate(int update) {
         mSettings.setUpdate(update);
-        mChannelIds = new ZattooChannelProperties(mSettings);
     }
+
     public void changeMerge(int merge) {
         mSettings.setMerge(merge);
-        mChannelIds = new ZattooChannelProperties(mSettings);
     }
 
     public void changeCustomChannelProperties(String customChannelProperties) {

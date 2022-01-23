@@ -4,6 +4,7 @@ import java.util.Properties;
 
 public class ZattooSettings {
     private static final String KEY_COUNTRY = "COUNTRY";
+    private static final String KEY_SOURCE_COUNTRY = "SOURCE_COUNTRY";
     private static final String KEY_LEARN_MODE = "LEARN_MODE";
     private static final String KEY_CUSTOM_CHANNEL_PROPERTIES = "CUSTOM_CHANNEL_PROPERTIES";
     private static final String KEY_REREAD_CUSTOM_CHANNEL_PROPERTIES = "REREAD_CUSTOM_CHANNEL_PROPERTIES";
@@ -48,6 +49,14 @@ public class ZattooSettings {
     }
     public void setCountry(String country) {
         this.mProperties.setProperty(KEY_COUNTRY, country);
+    }
+
+    public String getSourceCountry() {
+        return this.mProperties.getProperty(KEY_SOURCE_COUNTRY, "de");
+    }
+
+    public void setSourceCountry(String sourceCountry) {
+        this.mProperties.setProperty(KEY_SOURCE_COUNTRY, sourceCountry);
     }
 
     public boolean isLearnMode() {
