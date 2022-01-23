@@ -76,10 +76,14 @@ public class ZattooSettings {
         this.mProperties.setProperty(KEY_REREAD_CUSTOM_CHANNEL_PROPERTIES, reread ? "true" : "false");
     }
 
-    public void setUpdate(){
-
+    public void setUpdate( int update){
+        this.mProperties.setProperty(KEY_UPDATE, Integer.toString(update));
     }
-    
+
+    public void setMerge( int merge){
+        this.mProperties.setProperty(KEY_MERGE, Integer.toString(merge));
+    }
+
     public int getUpdate(){
         return Integer.parseInt(this.mProperties.getProperty(KEY_UPDATE, Integer.toString(UPDATE_BY_REPLACE)));
     }

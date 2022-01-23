@@ -28,7 +28,7 @@ public final class ZattooPlugin extends Plugin {
     private ZattooSettings mSettings;
     private PluginsProgramFilter mFilters;
     private ZattooChannelProperties mChannelIds;
-    private HashSet<Program> mSwitchPrograms = new HashSet();
+    private final HashSet<Program> mSwitchPrograms = new HashSet();
     private PluginTreeNode mRootNode;
     private ThemeIcon mThemeIcon;
     private Timer mTimer;
@@ -36,7 +36,7 @@ public final class ZattooPlugin extends Plugin {
     private static CustomChannelProperties customChannelProperties = null;
 
     public ZattooPlugin() {
-        this.mProgramReceiveTarget = new ProgramReceiveTarget(this, mLocalizer.msg("receiveTarget", "Show on Zattoo"), "ZATTOO_TARGET");
+        mProgramReceiveTarget = new ProgramReceiveTarget(this, mLocalizer.msg("receiveTarget", "Show on Zattoo"), "ZATTOO_TARGET");
         mInstance = this;
     }
 
@@ -45,32 +45,35 @@ public final class ZattooPlugin extends Plugin {
     }
 
     public Properties storeSettings() {
-        return this.mSettings.storeSettings();
+        return mSettings.storeSettings();
     }
 
     public void loadSettings(Properties properties) {
-        this.mSettings = new ZattooSettings(properties);
-        this.changeCountry(this.mSettings.getCountry());
+        mSettings = new ZattooSettings(properties);
+        changeCountry(mSettings.getCountry());
     }
 
     public void changeCountry(String country) {
-        this.mSettings.setCountry(country);
-        this.mChannelIds = new ZattooChannelProperties(this.mSettings);
+        mSettings.setCountry(country);
+        mChannelIds = new ZattooChannelProperties(mSettings);
     }
-
-    public void changeLearnMode(boolean learnMode) {
-        this.mSettings.setLearnMode(learnMode);
-        this.mChannelIds = new ZattooChannelProperties(this.mSettings);
+    public void changeUpdate(int update) {
+        mSettings.setUpdate(update);
+        mChannelIds = new ZattooChannelProperties(mSettings);
+    }
+    public void changeMerge(int merge) {
+        mSettings.setMerge(merge);
+        mChannelIds = new ZattooChannelProperties(mSettings);
     }
 
     public void changeCustomChannelProperties(String customChannelProperties) {
-        this.mSettings.setCustomChannelProperties(customChannelProperties);
-        this.mChannelIds = new ZattooChannelProperties(this.mSettings);
+        mSettings.setCustomChannelProperties(customChannelProperties);
+        mChannelIds = new ZattooChannelProperties(mSettings);
     }
 
     public void changeRereadCustomChannelProperties(boolean reread) {
-        this.mSettings.setRereadCustomChannelProperties(reread);
-        this.mChannelIds = new ZattooChannelProperties(this.mSettings);
+        mSettings.setRereadCustomChannelProperties(reread);
+        mChannelIds = new ZattooChannelProperties(mSettings);
     }
 
     public PluginInfo getInfo() {
@@ -81,24 +84,24 @@ public final class ZattooPlugin extends Plugin {
     }
 
     public SettingsTab getSettingsTab() {
-        return new ZattooSettingsTab(this.mSettings);
+        return new ZattooSettingsTab(mSettings);
     }
 
     public Icon getPluginIcon() {
-        if (this.mIcon == null) {
-            this.mIcon = this.createImageIcon("apps", "zattoo", 16);
+        if (mIcon == null) {
+            mIcon = createImageIcon("apps", "zattoo", 16);
         }
 
-        return this.mIcon;
+        return mIcon;
     }
 
     public ActionMenu getContextMenuActions(Program program) {
         if (getPluginManager().getExampleProgram().equals(program)) {
-            return this.getRememberActionMenu(program);
-        } else if (this.isProgramSupported(program)) {
-            return this.getRememberActionMenu(program);
+            return getRememberActionMenu(program);
+        } else if (isProgramSupported(program)) {
+            return getRememberActionMenu(program);
         } else {
-            return program.isOnAir() && this.isChannelSupported(program.getChannel()) ? this.getSwitchActionMenu(program.getChannel()) : null;
+            return program.isOnAir() && isChannelSupported(program.getChannel()) ? getSwitchActionMenu(program.getChannel()) : null;
         }
     }
 
@@ -107,20 +110,20 @@ public final class ZattooPlugin extends Plugin {
             public void actionPerformed(ActionEvent evt) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        ZattooPlugin.this.mSwitchPrograms.add(program);
+                        mSwitchPrograms.add(program);
                         program.mark(ZattooPlugin.this);
-                        ZattooPlugin.this.updateRootNode();
+                        updateRootNode();
                     }
                 });
             }
         };
         action.putValue("Name", mLocalizer.msg("contextMenuRemember", "Switch channel when program starts"));
-        action.putValue("SmallIcon", this.getPluginIcon());
+        action.putValue("SmallIcon", getPluginIcon());
         return new ActionMenu(action);
     }
 
     public ActionMenu getContextMenuActions(Channel channel) {
-        return channel != null && this.isChannelSupported(channel) ? this.getSwitchActionMenu(channel) : null;
+        return channel != null && isChannelSupported(channel) ? getSwitchActionMenu(channel) : null;
     }
 
     private ActionMenu getSwitchActionMenu(final Channel channel) {
@@ -128,29 +131,28 @@ public final class ZattooPlugin extends Plugin {
             public void actionPerformed(ActionEvent evt) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        ZattooPlugin.this.openChannel(channel);
+                        openChannel(channel);
                     }
                 });
             }
         };
         action.putValue("Name", mLocalizer.msg("contextMenuSwitch", "Switch channel"));
-        action.putValue("SmallIcon", this.getPluginIcon());
+        action.putValue("SmallIcon", getPluginIcon());
         return new ActionMenu(action);
     }
 
     private void openChannel(Channel channel) {
-        String id = this.getChannelId(channel);
+        String id = getChannelId(channel);
 
         if (id != null) {
             String url = "https://zattoo.com/live/" + id;
-            ExecutionHandler executionHandler = null;
             mLog.log(Level.INFO, "Open URL " + url);
             Launch.openURL(url);
         }
     }
 
     private String getChannelId(Channel channel) {
-        String id = this.mChannelIds.getProperty(channel);
+        String id = mChannelIds.getProperty(channel);
         if (id == null) {
             mLog.log(Level.INFO, "No zattoo channel mapping found for " + channel.getUniqueId());
             return null;
@@ -169,19 +171,19 @@ public final class ZattooPlugin extends Plugin {
     }
 
     public PluginsProgramFilter[] getAvailableFilter() {
-        if (this.mFilters == null) {
-            this.mFilters = new PluginsProgramFilter(this) {
+        if (mFilters == null) {
+            mFilters = new PluginsProgramFilter(this) {
                 public String getSubName() {
                     return ZattooPlugin.mLocalizer.msg("supportedChannels", "Supported channels");
                 }
 
                 public boolean accept(Program program) {
-                    return ZattooPlugin.this.isProgramSupported(program);
+                    return isProgramSupported(program);
                 }
             };
         }
 
-        return new PluginsProgramFilter[]{this.mFilters};
+        return new PluginsProgramFilter[]{mFilters};
     }
 
     public Class<? extends PluginsFilterComponent>[] getAvailableFilterComponentClasses() {
@@ -189,7 +191,7 @@ public final class ZattooPlugin extends Plugin {
     }
 
     public boolean isChannelSupported(Channel channel) {
-        return this.getChannelId(channel) != null;
+        return getChannelId(channel) != null;
     }
 
     public static boolean canUseLocalPlayer() {
@@ -201,43 +203,43 @@ public final class ZattooPlugin extends Plugin {
     }
 
     public PluginTreeNode getRootNode() {
-        if (this.mRootNode == null) {
-            this.mRootNode = new PluginTreeNode(this);
-            this.mRootNode.getMutableTreeNode().setIcon(this.getPluginIcon());
+        if (mRootNode == null) {
+            mRootNode = new PluginTreeNode(this);
+            mRootNode.getMutableTreeNode().setIcon(getPluginIcon());
         }
 
-        return this.mRootNode;
+        return mRootNode;
     }
 
     private void updateRootNode() {
-        this.getRootNode().clear();
-        Iterator i$ = this.mSwitchPrograms.iterator();
+        getRootNode().clear();
+        Iterator i$ = mSwitchPrograms.iterator();
 
         while (i$.hasNext()) {
             Program program = (Program) i$.next();
-            this.mRootNode.addProgramWithoutCheck(program);
+            mRootNode.addProgramWithoutCheck(program);
         }
 
-        this.mRootNode.update();
+        mRootNode.update();
     }
 
     public ThemeIcon getMarkIconFromTheme() {
-        if (this.mThemeIcon == null) {
-            this.mThemeIcon = new ThemeIcon("apps", "zattoo", 16);
+        if (mThemeIcon == null) {
+            mThemeIcon = new ThemeIcon("apps", "zattoo", 16);
         }
 
-        return this.mThemeIcon;
+        return mThemeIcon;
     }
 
     public void handleTvBrowserStartFinished() {
-        this.mTimer = new Timer(60000, new ActionListener() {
+        mTimer = new Timer(60000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Date today = new Date();
                 int now = IOUtilities.getMinutesAfterMidnight();
                 int delay = 2;
                 Program startProgram = null;
-                synchronized (ZattooPlugin.this.mSwitchPrograms) {
-                    Iterator i$ = ZattooPlugin.this.mSwitchPrograms.iterator();
+                synchronized (mSwitchPrograms) {
+                    Iterator i$ = mSwitchPrograms.iterator();
 
                     while (i$.hasNext()) {
                         Program program = (Program) i$.next();
@@ -251,16 +253,16 @@ public final class ZattooPlugin extends Plugin {
                     }
 
                     if (startProgram != null) {
-                        ZattooPlugin.this.mSwitchPrograms.remove(startProgram);
+                        mSwitchPrograms.remove(startProgram);
                         startProgram.unmark(ZattooPlugin.this);
-                        ZattooPlugin.this.updateRootNode();
-                        ZattooPlugin.this.openChannel(startProgram.getChannel());
+                        updateRootNode();
+                        openChannel(startProgram.getChannel());
                     }
 
                 }
             }
         });
-        this.mTimer.start();
+        mTimer.start();
     }
 
     public boolean canReceiveProgramsWithTarget() {
@@ -268,7 +270,7 @@ public final class ZattooPlugin extends Plugin {
     }
 
     public ProgramReceiveTarget[] getProgramReceiveTargets() {
-        return new ProgramReceiveTarget[]{this.mProgramReceiveTarget};
+        return new ProgramReceiveTarget[]{mProgramReceiveTarget};
     }
 
     public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
@@ -277,18 +279,18 @@ public final class ZattooPlugin extends Plugin {
 
         for (int i$ = 0; i$ < len$; ++i$) {
             Program program = arr$[i$];
-            if (this.isProgramSupported(program)) {
-                this.mSwitchPrograms.add(program);
+            if (isProgramSupported(program)) {
+                mSwitchPrograms.add(program);
                 program.mark(this);
             }
         }
 
-        this.updateRootNode();
+        updateRootNode();
         return true;
     }
 
     private boolean isProgramSupported(Program program) {
-        return this.isChannelSupported(program.getChannel()) && !program.isExpired() && !program.isOnAir();
+        return isChannelSupported(program.getChannel()) && !program.isExpired() && !program.isOnAir();
     }
 
 
@@ -297,7 +299,7 @@ public final class ZattooPlugin extends Plugin {
             customChannelProperties = new CustomChannelProperties(mSettings);
         customChannelProperties.clear(false);
         for (Channel channel : channels) {
-            String id = this.getChannelId(channel);
+            String id = getChannelId(channel);
             String zattooChannel = (id == null) ? "" : id;
             customChannelProperties.setChannel(channel, zattooChannel);
         }
