@@ -110,6 +110,12 @@ public class CustomChannelProperties {
         return channel.getBaseCountry() + "," + channelName;
     }
 
+    public boolean containsKey ( Channel channel) {
+        if ( hasErrors)
+            return false;
+        return properties.containsKey(getKey(channel));
+    }
+
     public boolean storePropertyFile() {
         if (hasErrors)
             return false;

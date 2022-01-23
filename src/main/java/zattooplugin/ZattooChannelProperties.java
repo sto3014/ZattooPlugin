@@ -3,8 +3,8 @@ package zattooplugin;
 import java.io.File;
 
 public class ZattooChannelProperties extends ChannelProperties {
-   public ZattooChannelProperties(ZattooSettings settings ) {
-      super(settings);
+   public ZattooChannelProperties(String country, String customChannelProperties, boolean rereadCustomChannelProperties ) {
+      super(country, customChannelProperties, rereadCustomChannelProperties);
    }
 
    protected void checkProperties() {

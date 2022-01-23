@@ -11,19 +11,19 @@ public abstract class ChannelProperties {
     protected Properties mProperties;
     protected boolean isCustom;
     protected boolean hasErrors = false;
-    private ZattooSettings mSettings;
+    protected boolean reread;
 
-    protected ChannelProperties(ZattooSettings settings) {
-        this.mSettings = settings;
-        isCustom = this.mSettings.getCountry().equals("custom");
+    protected ChannelProperties(String country, String customChannelProperties, boolean rereadCustomChannelProperties) {
+        isCustom = country.equals("custom");
         if (isCustom) {
-            this.mFileName = this.mSettings.getCustomChannelProperties();
+            this.mFileName = customChannelProperties;
         } else
-            this.mFileName = "channels_" + this.mSettings.getCountry() + ".properties";
+            this.mFileName = "channels_" + country + ".properties";
+        reread = rereadCustomChannelProperties;
     }
 
     private void initializeProperties() {
-        if (this.mProperties == null || ( isCustom && mSettings.isRereadCustomChannelProperties())) {
+        if (this.mProperties == null || ( isCustom && reread)) {
             InputStream stream;
             if (isCustom) {
                 try {

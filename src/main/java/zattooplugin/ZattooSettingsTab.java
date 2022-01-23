@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -40,14 +41,14 @@ public final class ZattooSettingsTab implements SettingsTab {
     private JRadioButton mMergeOnlyNew;
 
     public ZattooSettingsTab(ZattooSettings settings) {
-        this.mSettings = settings;
+        mSettings = settings;
     }
 
     public JPanel createSettingsPanel() {
 
         CellConstraints cc = new CellConstraints();
         PanelBuilder builderMain = new PanelBuilder(
-                new FormLayout( "0px:g"
+                new FormLayout("0px:g"
                         , "pref,pref,pref"), new JPanel());
         builderMain.add(createCountryPanel(), cc.xy(1, 1));
         builderMain.add(createCustomChannelPanel(), cc.xy(1, 2));
@@ -56,8 +57,14 @@ public final class ZattooSettingsTab implements SettingsTab {
     }
 
     public void saveSettings() {
-        ZattooPlugin.getInstance().changeCountry(((ZattooCountry) this.mCountry.getSelectedItem()).getCode());
-        ZattooPlugin.getInstance().changeRereadCustomChannelProperties(this.mReread.isSelected());
+        String currentCountry = ((ZattooCountry) mCountry.getSelectedItem()).getCode();
+        if (mUpdateCustomChannels.isSelected()) {
+            String sourceCountry = ((ZattooCountry) mSourceCountry.getSelectedItem()).getCode();
+            ZattooPlugin.getInstance().changeCountry(sourceCountry);
+            ZattooPlugin.getInstance().updateCustomChannels(mUpdateByReplace.isSelected(), mMergeAndReplace.isSelected());
+        }
+        ZattooPlugin.getInstance().changeCountry(currentCountry);
+        ZattooPlugin.getInstance().changeRereadCustomChannelProperties(mReread.isSelected());
     }
 
     public Icon getIcon() {
@@ -100,11 +107,11 @@ public final class ZattooSettingsTab implements SettingsTab {
         return content;
     }
 
-    private JPanel createCountryPanel(){
+    private JPanel createCountryPanel() {
         CellConstraints cc = new CellConstraints();
 
         PanelBuilder builder = new PanelBuilder(
-                new FormLayout( "5dlu,pref,5dlu,pref"
+                new FormLayout("5dlu,pref,5dlu,pref"
                         , ""));
 
         ZattooCountry[] countries = new ZattooCountry[]{
@@ -113,20 +120,20 @@ public final class ZattooSettingsTab implements SettingsTab {
                 new ZattooCountry("at", mLocalizer.msg("country_at", "Austria")),
                 new ZattooCountry("custom", mLocalizer.msg("country_custom", "Customized list of channels")),
         };
-        this.mCountry = new JComboBox(countries);
-        this.mCountry.setSelectedItem(new ZattooCountry(this.mSettings.getCountry(), ""));
+        mCountry = new JComboBox(countries);
+        mCountry.setSelectedItem(new ZattooCountry(mSettings.getCountry(), ""));
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow();
         builder.add(new JLabel(mLocalizer.msg("country", "Country:")), cc.xy(2, builder.getRow()));
-        builder.add(this.mCountry, cc.xy(4, builder.getRow()));
-        return  builder.getPanel();
+        builder.add(mCountry, cc.xy(4, builder.getRow()));
+        return builder.getPanel();
     }
 
-    private JPanel createCustomChannelPanel(){
+    private JPanel createCustomChannelPanel() {
         CellConstraints cc = new CellConstraints();
         PanelBuilder builder = new PanelBuilder(
-                new FormLayout( "5dlu,10dlu,5dlu,10dlu,5dlu,10dlu,5dlu,pref,0px:g"
+                new FormLayout("5dlu,10dlu,5dlu,10dlu,5dlu,10dlu,5dlu,pref,0px:g"
                         , ""));
 
         // Separator
@@ -140,37 +147,34 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(2);
         mUpdateCustomChannels = new JCheckBox(mLocalizer.msg("updateCustomChannels", "updateCustomChannels"), false);
-        builder.add(mUpdateCustomChannels, cc.xyw(2, builder.getRow(), builder.getColumnCount()-1));
+        builder.add(mUpdateCustomChannels, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
         // Update by replace
         //builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(1);
-        mUpdateByReplace = new JRadioButton(mLocalizer.msg("updateByReplace", "updateByReplace"),mSettings.getUpdateByReplace());
-        builder.add(mUpdateByReplace,cc.xyw(4, builder.getRow(), builder.getColumnCount()-3));
+        mUpdateByReplace = new JRadioButton(mLocalizer.msg("updateByReplace", "updateByReplace"), mSettings.getUpdateByReplace());
+        builder.add(mUpdateByReplace, cc.xyw(4, builder.getRow(), builder.getColumnCount() - 3));
         // Update by merge
-        //builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(1);
         mUpdateByMerge = new JRadioButton(mLocalizer.msg("updateByMerge", "updateByMerge"), mSettings.getUpdateByMerge());
-        builder.add(mUpdateByMerge,cc.xyw(4, builder.getRow(), builder.getColumnCount()-3));
+        builder.add(mUpdateByMerge, cc.xyw(4, builder.getRow(), builder.getColumnCount() - 3));
         // Group
         ButtonGroup buttonGroupUpdate = new ButtonGroup();
         buttonGroupUpdate.add(mUpdateByReplace);
         buttonGroupUpdate.add(mUpdateByMerge);
 
         // Merge and replace
-        //builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(1);
-        mMergeAndReplace = new JRadioButton(mLocalizer.msg("mergeandreplace", "mergeandreplace"),mSettings.getMergeAndReplace());
-        builder.add(mMergeAndReplace,cc.xyw(6, builder.getRow(), builder.getColumnCount()-5));
+        mMergeAndReplace = new JRadioButton(mLocalizer.msg("mergeandreplace", "mergeandreplace"), mSettings.getMergeAndReplace());
+        builder.add(mMergeAndReplace, cc.xyw(6, builder.getRow(), builder.getColumnCount() - 5));
         // Merge only new
-        //builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(1);
-        mMergeOnlyNew = new JRadioButton(mLocalizer.msg("mergeonlynew", "mergeonlynew"),mSettings.getMergeOnlyNew());
-        builder.add(mMergeOnlyNew,cc.xyw(6, builder.getRow(), builder.getColumnCount()-5));
+        mMergeOnlyNew = new JRadioButton(mLocalizer.msg("mergeonlynew", "mergeonlynew"), mSettings.getMergeOnlyNew());
+        builder.add(mMergeOnlyNew, cc.xyw(6, builder.getRow(), builder.getColumnCount() - 5));
         // Group
         ButtonGroup buttonGroupMerge = new ButtonGroup();
         buttonGroupMerge.add(mMergeAndReplace);
@@ -182,24 +186,22 @@ public final class ZattooSettingsTab implements SettingsTab {
                 new ZattooCountry("ch", mLocalizer.msg("country_ch", "Switzerland")),
                 new ZattooCountry("at", mLocalizer.msg("country_at", "Austria")),
         };
-        this.mSourceCountry = new JComboBox(countries);
-        this.mSourceCountry.setSelectedItem(new ZattooCountry(this.mSettings.getSourceCountry(), ""));
+        mSourceCountry = new JComboBox(countries);
+        mSourceCountry.setSelectedItem(new ZattooCountry(mSettings.getSourceCountry(), ""));
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(2);
-        builder.add(new JLabel(mLocalizer.msg("sourcecountry", "Source Country:")), cc.xyw(4, builder.getRow(),3));
-        builder.add(this.mSourceCountry, cc.xy(8, builder.getRow()));
+        builder.add(new JLabel(mLocalizer.msg("sourcecountry", "Source Country:")), cc.xyw(4, builder.getRow(), 3));
+        builder.add(mSourceCountry, cc.xy(8, builder.getRow()));
 
         // Reread list
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(2);
-        mReread = new JCheckBox(mLocalizer.msg("reread", "Reread customized list of channels"), this.mSettings.isRereadCustomChannelProperties());
-        builder.add(mReread, cc.xyw(2, builder.getRow(), builder.getColumnCount()-1));
+        mReread = new JCheckBox(mLocalizer.msg("reread", "Reread customized list of channels"), mSettings.isRereadCustomChannelProperties());
+        builder.add(mReread, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
         builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
-        //builder.appendRow(FormSpecs.PREF_ROWSPEC);
-
 
 //        // Help section
 //        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
@@ -211,13 +213,13 @@ public final class ZattooSettingsTab implements SettingsTab {
 //        helpText.setOpaque(true);
 //        helpText.setEnabled(true);
 //        builder.add(helpText, cc.xyw(2, builder.getRow(), builder.getColumnCount()-1));
-        return  builder.getPanel();
+        return builder.getPanel();
     }
 
-    private JPanel createFilePanel (){
+    private JPanel createFilePanel() {
         CellConstraints cc = new CellConstraints();
         PanelBuilder builder = new PanelBuilder(
-                new FormLayout( "5dlu,10dlu,0px:g"
+                new FormLayout("5dlu,10dlu,0px:g"
                         , ""));
 
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
@@ -228,13 +230,13 @@ public final class ZattooSettingsTab implements SettingsTab {
         textPropertyFileHint.setAlignmentY(0.5F);
         textPropertyFileHint.setOpaque(true);
         textPropertyFileHint.setEnabled(true);
-        builder.add(textPropertyFileHint, cc.xyw(2, builder.getRow(), builder.getColumnCount()-1));
+        builder.add(textPropertyFileHint, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(2);
-        JLabel labelPropertyFile = new JLabel(  mSettings.getCustomChannelProperties() +":");
-        builder.add(labelPropertyFile, cc.xyw(2, builder.getRow(), builder.getColumnCount()-1));
+        JLabel labelPropertyFile = new JLabel(mSettings.getCustomChannelProperties() + ":");
+        builder.add(labelPropertyFile, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
 
         // Property file: editor
@@ -275,7 +277,7 @@ public final class ZattooSettingsTab implements SettingsTab {
 
             }
         });
-        builder.add(new JScrollPane(mEditor), cc.xyw(2, builder.getRow(), builder.getColumnCount()-1));
+        builder.add(new JScrollPane(mEditor), cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 mEditor.setCaretPosition(0);
@@ -286,9 +288,9 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(2);
-        this.mSaveBtn = new JButton(mLocalizer.msg("saveBtn", "Save"));
-        this.mSaveBtn.setEnabled(false);
-        this.mSaveBtn.addActionListener(new ActionListener() {
+        mSaveBtn = new JButton(mLocalizer.msg("saveBtn", "Save"));
+        mSaveBtn.setEnabled(false);
+        mSaveBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String content = mEditor.getText();
 
@@ -304,11 +306,11 @@ public final class ZattooSettingsTab implements SettingsTab {
             }
         });
         ButtonBarBuilder buttonBar = new ButtonBarBuilder();
-        buttonBar.addButton(new JButton[]{this.mSaveBtn});
-        builder.add(buttonBar.getPanel(), cc.xyw(2, builder.getRow(), builder.getColumnCount()-1));
+        buttonBar.addButton(new JButton[]{mSaveBtn});
+        builder.add(buttonBar.getPanel(), cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
         JPanel panel = builder.getPanel();
         Border border = new TitledBorder(mLocalizer.msg("propertyFile", "Configuration file"));
         panel.setBorder(border);
-        return  panel;
+        return panel;
     }
 }

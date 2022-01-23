@@ -1,6 +1,7 @@
 package zattooplugin;
 
 import devplugin.*;
+import tvbrowser.core.ChannelList;
 import util.browserlauncher.Launch;
 import util.io.ExecutionHandler;
 import util.io.IOUtilities;
@@ -55,7 +56,8 @@ public final class ZattooPlugin extends Plugin {
 
     public void changeCountry(String country) {
         mSettings.setCountry(country);
-        mChannelIds = new ZattooChannelProperties(mSettings);
+        mChannelIds = new ZattooChannelProperties(country, mSettings.getCustomChannelProperties(),
+                mSettings.isRereadCustomChannelProperties());
     }
 
     public void changeSourceCountry(String sourceCountry) {
@@ -72,12 +74,14 @@ public final class ZattooPlugin extends Plugin {
 
     public void changeCustomChannelProperties(String customChannelProperties) {
         mSettings.setCustomChannelProperties(customChannelProperties);
-        mChannelIds = new ZattooChannelProperties(mSettings);
+        mChannelIds = new ZattooChannelProperties(mSettings.getCountry(), customChannelProperties,
+                mSettings.isRereadCustomChannelProperties());
     }
 
     public void changeRereadCustomChannelProperties(boolean reread) {
         mSettings.setRereadCustomChannelProperties(reread);
-        mChannelIds = new ZattooChannelProperties(mSettings);
+        mChannelIds = new ZattooChannelProperties(mSettings.getCountry(), mSettings.getCustomChannelProperties(),
+                reread);
     }
 
     public PluginInfo getInfo() {
@@ -298,14 +302,27 @@ public final class ZattooPlugin extends Plugin {
     }
 
 
-    public void setCustomChannels(Channel[] channels) {
+    public void updateCustomChannels(boolean replace, boolean mergeAndReplace) {
+        Channel[] channels = ChannelList.getSubscribedChannels();
         if (customChannelProperties == null)
             customChannelProperties = new CustomChannelProperties(mSettings);
-        customChannelProperties.clear(false);
-        for (Channel channel : channels) {
-            String id = getChannelId(channel);
-            String zattooChannel = (id == null) ? "" : id;
-            customChannelProperties.setChannel(channel, zattooChannel);
+        if (replace) {
+            customChannelProperties.clear(false);
+        }
+        if (replace || mergeAndReplace) {
+            for (Channel channel : channels) {
+                String id = getChannelId(channel);
+                String zattooChannel = (id == null) ? "" : id;
+                customChannelProperties.setChannel(channel, zattooChannel);
+            }
+        } else {
+            for (Channel channel : channels) {
+                if (!customChannelProperties.containsKey(channel)) {
+                    String id = getChannelId(channel);
+                    String zattooChannel = (id == null) ? "" : id;
+                    customChannelProperties.setChannel(channel, zattooChannel);
+                }
+            }
         }
         customChannelProperties.storePropertyFile();
     }
