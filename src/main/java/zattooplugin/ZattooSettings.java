@@ -32,8 +32,6 @@ public class ZattooSettings {
         if (mProperties.getProperty(KEY_COUNTRY) == null)
             mProperties.setProperty(KEY_CUSTOM_CHANNEL_PROPERTIES, "de");
 
-        if (mProperties.getProperty(KEY_LEARN_MODE) == null)
-            mProperties.setProperty(KEY_LEARN_MODE, "false");
 
         if (mProperties.getProperty(KEY_CUSTOM_CHANNEL_PROPERTIES) == null)
             mProperties.setProperty(KEY_CUSTOM_CHANNEL_PROPERTIES, Helper.getPropertyPath() + "channels_custom.properties");

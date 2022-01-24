@@ -51,10 +51,10 @@ public final class ZattooSettingsTab implements SettingsTab {
         CellConstraints cc = new CellConstraints();
         PanelBuilder builderMain = new PanelBuilder(
                 new FormLayout("0px:g"
-                        , "pref,pref,pref"), new JPanel());
+                        , "pref,10dlu,pref,10dlu,pref"), new JPanel());
         builderMain.add(createCountryPanel(), cc.xy(1, 1));
-        builderMain.add(createCustomChannelPanel(), cc.xy(1, 2));
-        builderMain.add(createFilePanel(), cc.xy(1, 3));
+        builderMain.add(createCustomChannelPanel(), cc.xy(1, 3));
+        builderMain.add(createFilePanel(), cc.xy(1, 5));
         return builderMain.getPanel();
     }
 
@@ -160,10 +160,10 @@ public final class ZattooSettingsTab implements SettingsTab {
                 new FormLayout("5dlu,10dlu,5dlu,10dlu,5dlu,10dlu,5dlu,pref,0px:g"
                         , ""));
         // Separator
-        builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
-        builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.nextRow();
-        builder.addSeparator(mLocalizer.msg("customchannels", "Customized list of channels"));
+//        builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
+//        builder.appendRow(FormSpecs.PREF_ROWSPEC);
+//        builder.nextRow();
+//        builder.addSeparator(mLocalizer.msg("customchannels", "Customized list of channels"));
 
         // Hints
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
@@ -224,8 +224,10 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.add(new JLabel(mLocalizer.msg("sourcecountry", "Source Country:")), cc.xyw(4, builder.getRow(), 3));
         builder.add(mSourceCountry, cc.xy(8, builder.getRow()));
         builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
-
-        return builder.getPanel();
+        JPanel panel = builder.getPanel();
+        Border border = new TitledBorder(mLocalizer.msg("createChannelsList", "createChannelsList"));
+        panel.setBorder(border);
+        return panel;
     }
 
     private JPanel createFilePanel() {
