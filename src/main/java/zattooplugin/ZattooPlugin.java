@@ -56,8 +56,7 @@ public final class ZattooPlugin extends Plugin {
 
     public void changeCountry(String country) {
         mSettings.setCountry(country);
-        mChannelIds = new ZattooChannelProperties(country, mSettings.getCustomChannelProperties(),
-                mSettings.isRereadCustomChannelProperties());
+        mChannelIds = new ZattooChannelProperties(country, mSettings.getCustomChannelProperties());
     }
 
     public void changeSourceCountry(String sourceCountry) {
@@ -70,18 +69,6 @@ public final class ZattooPlugin extends Plugin {
 
     public void changeMerge(int merge) {
         mSettings.setMerge(merge);
-    }
-
-    public void changeCustomChannelProperties(String customChannelProperties) {
-        mSettings.setCustomChannelProperties(customChannelProperties);
-        mChannelIds = new ZattooChannelProperties(mSettings.getCountry(), customChannelProperties,
-                mSettings.isRereadCustomChannelProperties());
-    }
-
-    public void changeRereadCustomChannelProperties(boolean reread) {
-        mSettings.setRereadCustomChannelProperties(reread);
-        mChannelIds = new ZattooChannelProperties(mSettings.getCountry(), mSettings.getCustomChannelProperties(),
-                reread);
     }
 
     public PluginInfo getInfo() {
@@ -109,7 +96,12 @@ public final class ZattooPlugin extends Plugin {
         } else if (isProgramSupported(program)) {
             return getRememberActionMenu(program);
         } else {
-            return program.isOnAir() && isChannelSupported(program.getChannel()) ? getSwitchActionMenu(program.getChannel()) : null;
+            if (!program.isOnAir()) {
+                return null;
+            } else if (!isChannelSupported(program.getChannel())) {
+                return null;
+            } else
+                return getSwitchActionMenu(program.getChannel());
         }
     }
 
@@ -300,6 +292,7 @@ public final class ZattooPlugin extends Plugin {
     private boolean isProgramSupported(Program program) {
         return isChannelSupported(program.getChannel()) && !program.isExpired() && !program.isOnAir();
     }
+
 
 
     public void updateCustomChannels(boolean replace, boolean mergeAndReplace) {

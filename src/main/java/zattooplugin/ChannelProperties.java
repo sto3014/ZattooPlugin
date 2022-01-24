@@ -11,19 +11,17 @@ public abstract class ChannelProperties {
     protected Properties mProperties;
     protected boolean isCustom;
     protected boolean hasErrors = false;
-    protected boolean reread;
 
-    protected ChannelProperties(String country, String customChannelProperties, boolean rereadCustomChannelProperties) {
+    protected ChannelProperties(String country, String customChannelProperties) {
         isCustom = country.equals("custom");
         if (isCustom) {
             this.mFileName = customChannelProperties;
         } else
             this.mFileName = "channels_" + country + ".properties";
-        reread = rereadCustomChannelProperties;
     }
 
     private void initializeProperties() {
-        if (this.mProperties == null || ( isCustom && reread)) {
+        if (this.mProperties == null || ( isCustom)) {
             InputStream stream;
             if (isCustom) {
                 try {

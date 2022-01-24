@@ -31,6 +31,8 @@ public final class ZattooSettingsTab implements SettingsTab {
 
     private ZattooSettings mSettings;
     private JCheckBox mUpdateCustomChannels;
+    private JCheckBox mAddNewChannels;
+    private JCheckBox mShowHelpAsTooltip;
     private JCheckBox mReread;
     private JTextArea mEditor;
     private JButton mSaveBtn;
@@ -58,13 +60,15 @@ public final class ZattooSettingsTab implements SettingsTab {
 
     public void saveSettings() {
         String currentCountry = ((ZattooCountry) mCountry.getSelectedItem()).getCode();
+        String sourceCountry = ((ZattooCountry) mSourceCountry.getSelectedItem()).getCode();
         if (mUpdateCustomChannels.isSelected()) {
-            String sourceCountry = ((ZattooCountry) mSourceCountry.getSelectedItem()).getCode();
             ZattooPlugin.getInstance().changeCountry(sourceCountry);
             ZattooPlugin.getInstance().updateCustomChannels(mUpdateByReplace.isSelected(), mMergeAndReplace.isSelected());
         }
         ZattooPlugin.getInstance().changeCountry(currentCountry);
-        ZattooPlugin.getInstance().changeRereadCustomChannelProperties(mReread.isSelected());
+        ZattooPlugin.getInstance().changeSourceCountry(sourceCountry);
+        ZattooPlugin.getInstance().changeUpdate(mUpdateByReplace.isSelected() ? ZattooSettings.UPDATE_BY_REPLACE : ZattooSettings.UPDATE_BY_MERGE);
+        ZattooPlugin.getInstance().changeMerge(mMergeAndReplace.isSelected() ? ZattooSettings.MERGE_AND_REPLACE : ZattooSettings.MERGE_ONLY_NEW);
     }
 
     public Icon getIcon() {
@@ -76,7 +80,7 @@ public final class ZattooSettingsTab implements SettingsTab {
     }
 
     private Properties convertToProperties(String content) throws PropertyFormatException {
-        StringTokenizer lines = new StringTokenizer(content, "\n");
+        StringTokenizer lines = new StringTokenizer(content, System.lineSeparator());
         Properties properties = new Properties();
         int lineNo = 0;
         while (lines.hasMoreElements()) {
@@ -102,7 +106,7 @@ public final class ZattooSettingsTab implements SettingsTab {
         Enumeration keys = properties.propertyNames();
         while (keys.hasMoreElements()) {
             String key = (String) keys.nextElement();
-            content += key + "=" + properties.getProperty(key) + "\n";
+            content += key + "=" + properties.getProperty(key) + System.lineSeparator();
         }
         return content;
     }
@@ -111,8 +115,15 @@ public final class ZattooSettingsTab implements SettingsTab {
         CellConstraints cc = new CellConstraints();
 
         PanelBuilder builder = new PanelBuilder(
-                new FormLayout("5dlu,pref,5dlu,pref"
+                new FormLayout("5dlu,pref,5dlu,pref,0px:g"
                         , ""));
+
+        // Hints
+        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
+        builder.appendRow(FormSpecs.PREF_ROWSPEC);
+        builder.setRow(builder.getRowCount());
+        JTextArea textGeneralHint = UiUtilities.createHelpTextArea(mLocalizer.msg("countryHint", "countryHint"));
+        builder.add(textGeneralHint, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
         ZattooCountry[] countries = new ZattooCountry[]{
                 new ZattooCountry("de", mLocalizer.msg("country_de", "Germany")),
@@ -120,13 +131,26 @@ public final class ZattooSettingsTab implements SettingsTab {
                 new ZattooCountry("at", mLocalizer.msg("country_at", "Austria")),
                 new ZattooCountry("custom", mLocalizer.msg("country_custom", "Customized list of channels")),
         };
+
+
         mCountry = new JComboBox(countries);
         mCountry.setSelectedItem(new ZattooCountry(mSettings.getCountry(), ""));
-        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
+//        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
+        builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.nextRow();
+        builder.setRow(builder.getRowCount());
         builder.add(new JLabel(mLocalizer.msg("country", "Country:")), cc.xy(2, builder.getRow()));
         builder.add(mCountry, cc.xy(4, builder.getRow()));
+
+//        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
+//        builder.appendRow(FormSpecs.PREF_ROWSPEC);
+//        builder.nextRow(2);
+//        mShowHelpAsTooltip = new JCheckBox(
+//                mLocalizer.msg("showHelpAsTooltip", "showHelpAsTooltip"),
+//                mSettings.getShowHelpAsTooltip());
+//        builder.add(mShowHelpAsTooltip, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
+
+
         return builder.getPanel();
     }
 
@@ -135,15 +159,21 @@ public final class ZattooSettingsTab implements SettingsTab {
         PanelBuilder builder = new PanelBuilder(
                 new FormLayout("5dlu,10dlu,5dlu,10dlu,5dlu,10dlu,5dlu,pref,0px:g"
                         , ""));
-
         // Separator
         builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow();
         builder.addSeparator(mLocalizer.msg("customchannels", "Customized list of channels"));
 
-        // Update custom channels
+        // Hints
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
+        builder.appendRow(FormSpecs.PREF_ROWSPEC);
+        builder.setRow(builder.getRowCount());
+        JTextArea textGeneralHint = UiUtilities.createHelpTextArea(mLocalizer.msg("customHint", "customHint"));
+        builder.add(textGeneralHint, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
+
+        // Update custom channels
+        builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(2);
         mUpdateCustomChannels = new JCheckBox(mLocalizer.msg("updateCustomChannels", "updateCustomChannels"), false);
@@ -193,26 +223,8 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.nextRow(2);
         builder.add(new JLabel(mLocalizer.msg("sourcecountry", "Source Country:")), cc.xyw(4, builder.getRow(), 3));
         builder.add(mSourceCountry, cc.xy(8, builder.getRow()));
-
-        // Reread list
-        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
-        builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.nextRow(2);
-        mReread = new JCheckBox(mLocalizer.msg("reread", "Reread customized list of channels"), mSettings.isRereadCustomChannelProperties());
-        builder.add(mReread, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
-
         builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
 
-//        // Help section
-//        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
-//        builder.appendRow(FormSpecs.PREF_ROWSPEC);
-//        builder.nextRow(2);
-//        JTextArea helpText = UiUtilities.createHelpTextArea(mLocalizer.msg("helpcustom", "help"));
-//        helpText.setAlignmentY(0.5F);
-//        helpText.setAlignmentY(0.5F);
-//        helpText.setOpaque(true);
-//        helpText.setEnabled(true);
-//        builder.add(helpText, cc.xyw(2, builder.getRow(), builder.getColumnCount()-1));
         return builder.getPanel();
     }
 
@@ -224,17 +236,13 @@ public final class ZattooSettingsTab implements SettingsTab {
 
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.nextRow();
+        builder.setRow(builder.getRowCount());
         JTextArea textPropertyFileHint = UiUtilities.createHelpTextArea(mLocalizer.msg("propertyFileHint", "Hint"));
-        textPropertyFileHint.setAlignmentY(0.5F);
-        textPropertyFileHint.setAlignmentY(0.5F);
-        textPropertyFileHint.setOpaque(true);
-        textPropertyFileHint.setEnabled(true);
         builder.add(textPropertyFileHint, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.nextRow(2);
+        builder.setRow(builder.getRowCount());
         JLabel labelPropertyFile = new JLabel(mSettings.getCustomChannelProperties() + ":");
         builder.add(labelPropertyFile, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
@@ -250,7 +258,7 @@ public final class ZattooSettingsTab implements SettingsTab {
             content = convertToString(properties);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            content = "Error: could not find file " + mSettings.isRereadCustomChannelProperties();
+            content = "Error: could not find file " + mSettings.getCustomChannelProperties();
             mEditor.setEnabled(false);
         } catch (IOException e) {
             mEditor.setEnabled(false);
