@@ -6,6 +6,12 @@ import java.io.*;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+/**
+ * The type Custom channel properties.
+ *
+ * @author Dieter Stockhausen
+ * @since   1.5.0.0
+ */
 public class CustomChannelProperties {
     private Properties properties = null;
     private File propertyFile = null;
@@ -13,6 +19,11 @@ public class CustomChannelProperties {
     private static final char[] specialChars = {'.', '^', '$', '*', '+', '-', '?', '(', ')', '[',  ']',  '{', '}',  '|',  '—', '/'};
 
 
+    /**
+     * Instantiates a new Custom channel properties.
+     *
+     * @param settings the settings
+     */
     public CustomChannelProperties(ZattooSettings settings) {
         propertyFile = new File(settings.getCustomChannelProperties());
         properties = new Properties();
@@ -25,10 +36,25 @@ public class CustomChannelProperties {
             }
     }
 
+    /**
+     * Sets channel.
+     *
+     * @param channel       the channel
+     * @param zattooChannel the zattoo channel
+     * @return the channel
+     */
     public boolean setChannel(Channel channel, String zattooChannel) {
         return setChannel(channel, zattooChannel, true);
     }
 
+    /**
+     * Sets channel.
+     *
+     * @param channel       the channel
+     * @param zattooChannel the zattoo channel
+     * @param store         the store
+     * @return the channel
+     */
     public boolean setChannel(Channel channel, String zattooChannel, boolean store) {
         if (hasErrors)
             return false;
@@ -40,10 +66,23 @@ public class CustomChannelProperties {
         }
     }
 
+    /**
+     * Sets channel.
+     *
+     * @param channel the channel
+     * @return the channel
+     */
     public boolean setChannel(Channel channel) {
         return setChannel(channel, true);
     }
 
+    /**
+     * Sets channel.
+     *
+     * @param channel the channel
+     * @param store   the store
+     * @return the channel
+     */
     public boolean setChannel(Channel channel, boolean store) {
         if (hasErrors)
             return false;
@@ -55,6 +94,13 @@ public class CustomChannelProperties {
     }
 
 
+    /**
+     * Remove channel boolean.
+     *
+     * @param channel the channel
+     * @param store   the store
+     * @return the boolean
+     */
     public boolean removeChannel(Channel channel, boolean store) {
         if (hasErrors)
             return false;
@@ -65,10 +111,23 @@ public class CustomChannelProperties {
             return true;
     }
 
+    /**
+     * Remove channel boolean.
+     *
+     * @param channel the channel
+     * @return the boolean
+     */
     public boolean removeChannel(Channel channel) {
         return removeChannel(channel, true);
     }
 
+    /**
+     * Remove channels boolean.
+     *
+     * @param channels the channels
+     * @param store    the store
+     * @return the boolean
+     */
     public boolean removeChannels(Channel[] channels, boolean store) {
         if (hasErrors)
             return false;
@@ -81,10 +140,22 @@ public class CustomChannelProperties {
             return true;
     }
 
+    /**
+     * Remove channels boolean.
+     *
+     * @param channels the channels
+     * @return the boolean
+     */
     public boolean removeChannels(Channel[] channels) {
         return removeChannels(channels, true);
     }
 
+    /**
+     * Clear boolean.
+     *
+     * @param store the store
+     * @return the boolean
+     */
     public boolean clear(boolean store) {
         if (hasErrors)
             return false;
@@ -95,10 +166,21 @@ public class CustomChannelProperties {
             return true;
     }
 
+    /**
+     * Clear boolean.
+     *
+     * @return the boolean
+     */
     public boolean clear() {
         return clear(true);
     }
 
+    /**
+     * Gets key.
+     *
+     * @param channel the channel
+     * @return the key
+     */
     private String getKey(Channel channel) {
         // mask regex chars
         String channelName = channel.getDefaultName();
@@ -110,12 +192,23 @@ public class CustomChannelProperties {
         return channel.getBaseCountry() + "," + channelName;
     }
 
+    /**
+     * Contains key boolean.
+     *
+     * @param channel the channel
+     * @return the boolean
+     */
     public boolean containsKey ( Channel channel) {
         if ( hasErrors)
             return false;
         return properties.containsKey(getKey(channel));
     }
 
+    /**
+     * Store property file boolean.
+     *
+     * @return the boolean
+     */
     public boolean storePropertyFile() {
         if (hasErrors)
             return false;

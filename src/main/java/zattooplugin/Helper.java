@@ -1,8 +1,19 @@
 package zattooplugin;
 
+/**
+ * The type Helper.
+ *
+ * @author Dieter Stockhausen
+ * @since   1.5.0.0
+ */
 public class Helper {
     private static String propertyPath = null;
 
+    /**
+     * Gets property path.
+     *
+     * @return the property path
+     */
     public static String getPropertyPath() {
         if (propertyPath == null) {
             String homeDir = System.getProperty("user.home");
@@ -23,6 +34,13 @@ public class Helper {
         return propertyPath;
     }
 
+    /**
+     * Help text to tooltip string.
+     *
+     * @param helpText      the help text
+     * @param maxLineLength the max line length
+     * @return the string
+     */
     public static String helpTextToTooltip(String helpText, int maxLineLength) {
         helpText = helpText.trim();
         if (helpText.indexOf(' ') < 0 || helpText.indexOf(' ') > maxLineLength)

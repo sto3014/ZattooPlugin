@@ -17,6 +17,12 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The type Zattoo settings.
+ *
+ * @author Bodo Tasche, Michael Keppler
+ * @since  1.0.0.0
+ */
 public final class ZattooPlugin extends Plugin {
     private static final String ICON_NAME = "zattoo";
     private static final String ICON_CATEGORY = "apps";
@@ -36,11 +42,19 @@ public final class ZattooPlugin extends Plugin {
     private ProgramReceiveTarget mProgramReceiveTarget;
     private static CustomChannelProperties customChannelProperties = null;
 
+    /**
+     * Instantiates a new Zattoo plugin.
+     */
     public ZattooPlugin() {
         mProgramReceiveTarget = new ProgramReceiveTarget(this, mLocalizer.msg("receiveTarget", "Show on Zattoo"), "ZATTOO_TARGET");
         mInstance = this;
     }
 
+    /**
+     * Gets version.
+     *
+     * @return the version
+     */
     public static Version getVersion() {
         return PLUGIN_VERSION;
     }
@@ -54,19 +68,39 @@ public final class ZattooPlugin extends Plugin {
         changeCountry(mSettings.getCountry());
     }
 
+    /**
+     * Change country.
+     *
+     * @param country the country
+     */
     public void changeCountry(String country) {
         mSettings.setCountry(country);
         mChannelIds = new ZattooChannelProperties(country, mSettings.getCustomChannelProperties());
     }
 
+    /**
+     * Change source country.
+     *
+     * @param sourceCountry the source country
+     */
     public void changeSourceCountry(String sourceCountry) {
         mSettings.setSourceCountry(sourceCountry);
     }
 
+    /**
+     * Change update.
+     *
+     * @param update the update
+     */
     public void changeUpdate(int update) {
         mSettings.setUpdate(update);
     }
 
+    /**
+     * Change merge.
+     *
+     * @param merge the merge
+     */
     public void changeMerge(int merge) {
         mSettings.setMerge(merge);
     }
@@ -82,6 +116,11 @@ public final class ZattooPlugin extends Plugin {
         return new ZattooSettingsTab(mSettings);
     }
 
+    /**
+     * Gets plugin icon.
+     *
+     * @return the plugin icon
+     */
     public Icon getPluginIcon() {
         if (mIcon == null) {
             mIcon = createImageIcon("apps", "zattoo", 16);
@@ -105,6 +144,12 @@ public final class ZattooPlugin extends Plugin {
         }
     }
 
+    /**
+     * Gets remember action menu.
+     *
+     * @param program the program
+     * @return the remember action menu
+     */
     private ActionMenu getRememberActionMenu(final Program program) {
         AbstractAction action = new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
@@ -126,6 +171,12 @@ public final class ZattooPlugin extends Plugin {
         return channel != null && isChannelSupported(channel) ? getSwitchActionMenu(channel) : null;
     }
 
+    /**
+     * Gets switch action menu.
+     *
+     * @param channel the channel
+     * @return the switch action menu
+     */
     private ActionMenu getSwitchActionMenu(final Channel channel) {
         AbstractAction action = new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
@@ -141,6 +192,11 @@ public final class ZattooPlugin extends Plugin {
         return new ActionMenu(action);
     }
 
+    /**
+     * Open channel.
+     *
+     * @param channel the channel
+     */
     private void openChannel(Channel channel) {
         String id = getChannelId(channel);
 
@@ -151,6 +207,12 @@ public final class ZattooPlugin extends Plugin {
         }
     }
 
+    /**
+     * Gets channel id.
+     *
+     * @param channel the channel
+     * @return the channel id
+     */
     private String getChannelId(Channel channel) {
         String id = mChannelIds.getProperty(channel);
         if (id == null) {
@@ -166,6 +228,11 @@ public final class ZattooPlugin extends Plugin {
         }
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static ZattooPlugin getInstance() {
         return mInstance;
     }
@@ -190,10 +257,21 @@ public final class ZattooPlugin extends Plugin {
         return new Class[]{ZattooFilterComponent.class};
     }
 
+    /**
+     * Is channel supported boolean.
+     *
+     * @param channel the channel
+     * @return the boolean
+     */
     public boolean isChannelSupported(Channel channel) {
         return getChannelId(channel) != null;
     }
 
+    /**
+     * Can use local player boolean.
+     *
+     * @return the boolean
+     */
     public static boolean canUseLocalPlayer() {
         return OperatingSystem.isMacOs() || OperatingSystem.isWindows();
     }
@@ -211,6 +289,9 @@ public final class ZattooPlugin extends Plugin {
         return mRootNode;
     }
 
+    /**
+     * Update root node.
+     */
     private void updateRootNode() {
         getRootNode().clear();
         Iterator i$ = mSwitchPrograms.iterator();
@@ -289,12 +370,23 @@ public final class ZattooPlugin extends Plugin {
         return true;
     }
 
+    /**
+     * Is program supported boolean.
+     *
+     * @param program the program
+     * @return the boolean
+     */
     private boolean isProgramSupported(Program program) {
         return isChannelSupported(program.getChannel()) && !program.isExpired() && !program.isOnAir();
     }
 
 
-
+    /**
+     * Update custom channels.
+     *
+     * @param replace         the replace
+     * @param mergeAndReplace the merge and replace
+     */
     public void updateCustomChannels(boolean replace, boolean mergeAndReplace) {
         Channel[] channels = ChannelList.getSubscribedChannels();
         if (customChannelProperties == null)

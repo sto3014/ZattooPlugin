@@ -9,9 +9,18 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * The type Zattoo settings.
+ *
+ * @author Bodo Tasche, Michael Keppler
+ * @since  1.0.0.0
+ */
 public final class ZattooFilterComponent extends PluginsFilterComponent {
    private static final Localizer mLocalizer = Localizer.getLocalizerFor(ZattooFilterComponent.class);
 
+   /**
+    * Instantiates a new Zattoo filter component.
+    */
    public ZattooFilterComponent() {
    }
 

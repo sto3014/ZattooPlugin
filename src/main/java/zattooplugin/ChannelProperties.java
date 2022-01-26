@@ -6,57 +6,81 @@ import java.io.*;
 import java.util.Enumeration;
 import java.util.Properties;
 
+/**
+ * The type Zattoo settings.
+ *
+ * @author Bodo Tasche, Michael Keppler
+ * @since  1.0.0.0
+ */
 public abstract class ChannelProperties {
     private String mFileName;
     protected Properties mProperties;
     protected boolean isCustom;
     protected boolean hasErrors = false;
 
+    /**
+     * Instantiates a new Channel properties.
+     *
+     * @param country                 the country
+     * @param customChannelProperties the custom channel properties
+     */
     protected ChannelProperties(String country, String customChannelProperties) {
         isCustom = country.equals("custom");
         if (isCustom) {
-            this.mFileName = customChannelProperties;
+            mFileName = customChannelProperties;
         } else
-            this.mFileName = "channels_" + country + ".properties";
+            mFileName = "channels_" + country + ".properties";
     }
 
+    /**
+     * Initialize properties.
+     */
     private void initializeProperties() {
-        if (this.mProperties == null || ( isCustom)) {
+        if (mProperties == null || ( isCustom)) {
             InputStream stream;
             if (isCustom) {
                 try {
-                    stream = new FileInputStream(this.mFileName);
+                    stream = new FileInputStream(mFileName);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     hasErrors = true;
                     return;
                 }
             } else {
-                stream = this.getClass().getResourceAsStream(this.mFileName);
+                stream = getClass().getResourceAsStream(mFileName);
             }
-            this.mProperties = new Properties();
+            mProperties = new Properties();
 
             try {
-                this.mProperties.load(stream);
+                mProperties.load(stream);
             } catch (IOException var3) {
                 var3.printStackTrace();
                 hasErrors = true;
             }
             if (!hasErrors)
-                this.checkProperties();
+                checkProperties();
         }
     }
 
+    /**
+     * Check properties.
+     */
     protected abstract void checkProperties();
 
+    /**
+     * Gets property.
+     *
+     * @param channel the channel
+     * @return the property
+     */
     public String getProperty(Channel channel) {
         if (hasErrors)
             return null;
         try {
-            this.initializeProperties();
+            initializeProperties();
             String channelCountry = channel.getBaseCountry();
             String channelName = channel.getDefaultName();
-            Enumeration keys = this.mProperties.propertyNames();
+            Enumeration keys = mProperties.propertyNames();
 
             while (true) {
                 String key;
@@ -78,13 +102,13 @@ public abstract class ChannelProperties {
                 for (int i$ = 0; i$ < len$; ++i$) {
                     String country = arr$[i$];
                     if (channelCountry.equalsIgnoreCase(country) && channelName.matches(name)) {
-                        String property = this.mProperties.getProperty(key);
-                        if (this.isValidProperty(property)) {
+                        String property = mProperties.getProperty(key);
+                        if (isValidProperty(property)) {
                             return property;
                         }
 
-                        property = this.mProperties.getProperty(property);
-                        if (this.isValidProperty(property)) {
+                        property = mProperties.getProperty(property);
+                        if (isValidProperty(property)) {
                             return property;
                         }
                     }
@@ -96,5 +120,11 @@ public abstract class ChannelProperties {
         }
     }
 
+    /**
+     * Is valid property boolean.
+     *
+     * @param var1 the var 1
+     * @return the boolean
+     */
     protected abstract boolean isValidProperty(String var1);
 }

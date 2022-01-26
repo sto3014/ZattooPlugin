@@ -24,6 +24,12 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+/**
+ * The type Zattoo settings.
+ *
+ * @author Bodo Tasche, Michael Keppler
+ * @since  1.0.0.0
+ */
 public final class ZattooSettingsTab implements SettingsTab {
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(ZattooSettingsTab.class);
     private JComboBox mCountry;
@@ -42,6 +48,11 @@ public final class ZattooSettingsTab implements SettingsTab {
     private JRadioButton mMergeAndReplace;
     private JRadioButton mMergeOnlyNew;
 
+    /**
+     * Instantiates a new Zattoo settings tab.
+     *
+     * @param settings the settings
+     */
     public ZattooSettingsTab(ZattooSettings settings) {
         mSettings = settings;
     }
@@ -79,6 +90,13 @@ public final class ZattooSettingsTab implements SettingsTab {
         return mLocalizer.msg("title", "Zattoo");
     }
 
+    /**
+     * Convert to properties properties.
+     *
+     * @param content the content
+     * @return the properties
+     * @throws PropertyFormatException the property format exception
+     */
     private Properties convertToProperties(String content) throws PropertyFormatException {
         StringTokenizer lines = new StringTokenizer(content, System.lineSeparator());
         Properties properties = new Properties();
@@ -101,6 +119,12 @@ public final class ZattooSettingsTab implements SettingsTab {
         return properties;
     }
 
+    /**
+     * Convert to string string.
+     *
+     * @param properties the properties
+     * @return the string
+     */
     private String convertToString(Properties properties) {
         String content = "";
         Enumeration keys = properties.propertyNames();
@@ -111,6 +135,11 @@ public final class ZattooSettingsTab implements SettingsTab {
         return content;
     }
 
+    /**
+     * Create country panel j panel.
+     *
+     * @return the j panel
+     */
     private JPanel createCountryPanel() {
         CellConstraints cc = new CellConstraints();
 
@@ -154,6 +183,11 @@ public final class ZattooSettingsTab implements SettingsTab {
         return builder.getPanel();
     }
 
+    /**
+     * Create custom channel panel j panel.
+     *
+     * @return the j panel
+     */
     private JPanel createCustomChannelPanel() {
         CellConstraints cc = new CellConstraints();
         PanelBuilder builder = new PanelBuilder(
@@ -230,6 +264,11 @@ public final class ZattooSettingsTab implements SettingsTab {
         return panel;
     }
 
+    /**
+     * Create file panel j panel.
+     *
+     * @return the j panel
+     */
     private JPanel createFilePanel() {
         CellConstraints cc = new CellConstraints();
         PanelBuilder builder = new PanelBuilder(
