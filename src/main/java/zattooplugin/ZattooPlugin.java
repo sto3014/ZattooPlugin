@@ -3,14 +3,14 @@ package zattooplugin;
 import devplugin.*;
 import tvbrowser.core.ChannelList;
 import util.browserlauncher.Launch;
-import util.io.ExecutionHandler;
 import util.io.IOUtilities;
 import util.misc.OperatingSystem;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * The type Zattoo settings.
  *
  * @author Bodo Tasche, Michael Keppler
- * @since  1.0.0.0
+ * @since 1.0.0.0
  */
 public final class ZattooPlugin extends Plugin {
     private static final String ICON_NAME = "zattoo";
@@ -75,7 +75,7 @@ public final class ZattooPlugin extends Plugin {
      */
     public void changeCountry(String country) {
         mSettings.setCountry(country);
-        mChannelIds = new ZattooChannelProperties(country, mSettings.getCustomChannelProperties());
+        mChannelIds = new ZattooChannelProperties(country, mSettings.getCustomChannelFileName());
     }
 
     /**
@@ -354,7 +354,7 @@ public final class ZattooPlugin extends Plugin {
         return new ProgramReceiveTarget[]{mProgramReceiveTarget};
     }
 
-    public boolean receivePrograms(Program[] programArr, ProgramReceiveTarget receiveTarget) {
+    public boolean receivePrograms(int eventType, Program[] programArr, ProgramReceiveTarget receiveTarget) {
         Program[] arr$ = programArr;
         int len$ = programArr.length;
 
@@ -389,26 +389,33 @@ public final class ZattooPlugin extends Plugin {
      */
     public void updateCustomChannels(boolean replace, boolean mergeAndReplace) {
         Channel[] channels = ChannelList.getSubscribedChannels();
-        if (customChannelProperties == null)
-            customChannelProperties = new CustomChannelProperties(mSettings);
-        if (replace) {
-            customChannelProperties.clear(false);
-        }
-        if (replace || mergeAndReplace) {
-            for (Channel channel : channels) {
-                String id = getChannelId(channel);
-                String zattooChannel = (id == null) ? "" : id;
-                customChannelProperties.setChannel(channel, zattooChannel);
+        try {
+            if (customChannelProperties == null)
+                customChannelProperties = new CustomChannelProperties(mSettings.getCustomChannelFileName());
+            if (replace) {
+                customChannelProperties.clear(false);
             }
-        } else {
-            for (Channel channel : channels) {
-                if (!customChannelProperties.containsKey(channel)) {
+            if (replace || mergeAndReplace) {
+                for (Channel channel : channels) {
                     String id = getChannelId(channel);
                     String zattooChannel = (id == null) ? "" : id;
                     customChannelProperties.setChannel(channel, zattooChannel);
                 }
+            } else {
+                for (Channel channel : channels) {
+                    if (!customChannelProperties.containsKey(channel)) {
+                        String id = getChannelId(channel);
+                        String zattooChannel = (id == null) ? "" : id;
+                        customChannelProperties.setChannel(channel, zattooChannel);
+                    }
+                }
             }
+            customChannelProperties.storeProperties();
+        } catch (IOException e) {
+            JFrame frame = new JFrame(mLocalizer.msg("error", "error"));
+            JOptionPane.showMessageDialog(frame,
+                    mLocalizer.msg("error.customFile", "error.customFile") + "\n" + e.getMessage());
+            return;
         }
-        customChannelProperties.storePropertyFile();
     }
 }

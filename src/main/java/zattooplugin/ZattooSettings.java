@@ -130,11 +130,11 @@ public class ZattooSettings {
      *
      * @return the custom channel properties
      */
-    public String getCustomChannelProperties() {
-        String properties = mProperties.getProperty(KEY_CUSTOM_CHANNEL_PROPERTIES);
-        if (properties == null)
-            properties = Helper.getPropertyPath() + "channels_custom.properties";
-        return properties;
+    public String getCustomChannelFileName() {
+        String fileName = mProperties.getProperty(KEY_CUSTOM_CHANNEL_PROPERTIES);
+        if (fileName == null)
+            fileName = Helper.getPropertyPath() + "channels_custom.properties";
+        return fileName;
     }
 
 

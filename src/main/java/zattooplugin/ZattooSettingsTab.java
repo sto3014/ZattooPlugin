@@ -2,44 +2,38 @@ package zattooplugin;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.*;
 import devplugin.SettingsTab;
-import util.ui.Localizer;
+import util.i18n.Localizer;
+import util.misc.OperatingSystem;
 import util.ui.UiUtilities;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
-import java.util.Enumeration;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.StringTokenizer;
+import java.awt.event.KeyEvent;
 
 /**
  * The type Zattoo settings.
  *
  * @author Bodo Tasche, Michael Keppler
- * @since  1.0.0.0
+ * @since 1.0.0.0
  */
 public final class ZattooSettingsTab implements SettingsTab {
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(ZattooSettingsTab.class);
+
     private JComboBox mCountry;
     private JComboBox mSourceCountry;
 
     private ZattooSettings mSettings;
     private JCheckBox mUpdateCustomChannels;
-    private JCheckBox mAddNewChannels;
-    private JCheckBox mShowHelpAsTooltip;
-    private JCheckBox mReread;
     private JTextArea mEditor;
     private JButton mSaveBtn;
     private Document mDocument;
@@ -47,6 +41,8 @@ public final class ZattooSettingsTab implements SettingsTab {
     private JRadioButton mUpdateByMerge;
     private JRadioButton mMergeAndReplace;
     private JRadioButton mMergeOnlyNew;
+    private CustomChannelProperties customChannelProperties;
+
 
     /**
      * Instantiates a new Zattoo settings tab.
@@ -69,7 +65,10 @@ public final class ZattooSettingsTab implements SettingsTab {
         return builderMain.getPanel();
     }
 
-    public void saveSettings() {
+    public void saveSettings(){
+        if ( mSaveBtn.isEnabled()) {
+            saveEditor();
+        }
         String currentCountry = ((ZattooCountry) mCountry.getSelectedItem()).getCode();
         String sourceCountry = ((ZattooCountry) mSourceCountry.getSelectedItem()).getCode();
         if (mUpdateCustomChannels.isSelected()) {
@@ -90,50 +89,8 @@ public final class ZattooSettingsTab implements SettingsTab {
         return mLocalizer.msg("title", "Zattoo");
     }
 
-    /**
-     * Convert to properties properties.
-     *
-     * @param content the content
-     * @return the properties
-     * @throws PropertyFormatException the property format exception
-     */
-    private Properties convertToProperties(String content) throws PropertyFormatException {
-        StringTokenizer lines = new StringTokenizer(content, System.lineSeparator());
-        Properties properties = new Properties();
-        int lineNo = 0;
-        while (lines.hasMoreElements()) {
-            String line = lines.nextToken().trim();
-            lineNo += 1;
-            if (line.startsWith("#"))
-                continue;
-            if (line.length() == 0)
-                continue;
-            if (line.indexOf("=") != line.lastIndexOf("="))
-                throw new PropertyFormatException("Format error line " + lineNo + ": line has more than one equal sign.");
-            StringTokenizer keyValuePair = new StringTokenizer(line, "=");
-            if (keyValuePair.countTokens() == 1)
-                properties.put(keyValuePair.nextToken().trim(), "");
-            else
-                properties.put(keyValuePair.nextToken().trim(), keyValuePair.nextToken().trim());
-        }
-        return properties;
-    }
 
-    /**
-     * Convert to string string.
-     *
-     * @param properties the properties
-     * @return the string
-     */
-    private String convertToString(Properties properties) {
-        String content = "";
-        Enumeration keys = properties.propertyNames();
-        while (keys.hasMoreElements()) {
-            String key = (String) keys.nextElement();
-            content += key + "=" + properties.getProperty(key) + System.lineSeparator();
-        }
-        return content;
-    }
+
 
     /**
      * Create country panel j panel.
@@ -164,21 +121,11 @@ public final class ZattooSettingsTab implements SettingsTab {
 
         mCountry = new JComboBox(countries);
         mCountry.setSelectedItem(new ZattooCountry(mSettings.getCountry(), ""));
-//        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.setRow(builder.getRowCount());
         builder.add(new JLabel(mLocalizer.msg("country", "Country:")), cc.xy(2, builder.getRow()));
         builder.add(mCountry, cc.xy(4, builder.getRow()));
-
-//        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
-//        builder.appendRow(FormSpecs.PREF_ROWSPEC);
-//        builder.nextRow(2);
-//        mShowHelpAsTooltip = new JCheckBox(
-//                mLocalizer.msg("showHelpAsTooltip", "showHelpAsTooltip"),
-//                mSettings.getShowHelpAsTooltip());
-//        builder.add(mShowHelpAsTooltip, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
-
 
         return builder.getPanel();
     }
@@ -193,11 +140,6 @@ public final class ZattooSettingsTab implements SettingsTab {
         PanelBuilder builder = new PanelBuilder(
                 new FormLayout("5dlu,10dlu,5dlu,10dlu,5dlu,10dlu,5dlu,pref,0px:g"
                         , ""));
-        // Separator
-//        builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
-//        builder.appendRow(FormSpecs.PREF_ROWSPEC);
-//        builder.nextRow();
-//        builder.addSeparator(mLocalizer.msg("customchannels", "Customized list of channels"));
 
         // Hints
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
@@ -272,7 +214,7 @@ public final class ZattooSettingsTab implements SettingsTab {
     private JPanel createFilePanel() {
         CellConstraints cc = new CellConstraints();
         PanelBuilder builder = new PanelBuilder(
-                new FormLayout("5dlu,10dlu,0px:g"
+                new FormLayout("5dlu,55dlu,5dlu,pref,0px:g"
                         , ""));
 
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
@@ -281,11 +223,39 @@ public final class ZattooSettingsTab implements SettingsTab {
         JTextArea textPropertyFileHint = UiUtilities.createHelpTextArea(mLocalizer.msg("propertyFileHint", "Hint"));
         builder.add(textPropertyFileHint, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
+        // Save button
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.setRow(builder.getRowCount());
-        JLabel labelPropertyFile = new JLabel(mSettings.getCustomChannelProperties() + ":");
-        builder.add(labelPropertyFile, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
+        builder.nextRow(2);
+        mSaveBtn = new JButton(mLocalizer.msg("saveBtn", "Save"));
+        mSaveBtn.setEnabled(false);
+        mSaveBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String content = mEditor.getText();
+                if (customChannelProperties != null) {
+                    try {
+                        customChannelProperties.load(content);
+                        customChannelProperties.storeProperties();
+                        mEditor.setText(customChannelProperties.toString());
+                        mSaveBtn.setEnabled(false);
+                    } catch (Exception ex) {
+                        JFrame frame = new JFrame("Error");
+                        JOptionPane.showMessageDialog(frame,
+                                ex.getMessage());
+                    }
+                }
+            }
+        });
+        ButtonBarBuilder buttonBar = new ButtonBarBuilder();
+        buttonBar.addButton(new JButton[]{mSaveBtn});
+        builder.add(buttonBar.getPanel(), cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
+
+
+        //builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
+        //builder.appendRow(FormSpecs.PREF_ROWSPEC);
+        //builder.setRow(builder.getRowCount());
+        JLabel labelPropertyFile = new JLabel(mSettings.getCustomChannelFileName() );
+        builder.add(labelPropertyFile, cc.xy(4, builder.getRow()));
 
 
         // Property file: editor
@@ -294,20 +264,28 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.nextRow(2);
         String content = "";
         try {
-            Properties properties = new Properties();
-            properties.load(new FileInputStream(mSettings.getCustomChannelProperties()));
-            content = convertToString(properties);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            content = "Error: could not find file " + mSettings.getCustomChannelProperties();
-            mEditor.setEnabled(false);
-        } catch (IOException e) {
-            mEditor.setEnabled(false);
+            customChannelProperties = new CustomChannelProperties(mSettings.getCustomChannelFileName());
+            content = customChannelProperties.toString();
+        } catch (Exception e) {
+            JFrame frame = new JFrame(mLocalizer.msg("error", "error"));
+            JOptionPane.showMessageDialog(frame,
+                    mLocalizer.msg("error.customFile", "error.customFile") + "\n" + e.getMessage());
         }
         mEditor = new JTextArea(content);
+        if ( customChannelProperties == null || customChannelProperties.isEmpty() ) {
+            mEditor.setEnabled(false);
+        }
         mEditor.setBackground(Color.WHITE);
         mEditor.setOpaque(true);
+        if (OperatingSystem.isMacOs()) {
+            InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+            mEditor.setInputMap(JComponent.WHEN_FOCUSED, im);
+        }
         mDocument = mEditor.getDocument();
+
         mDocument.addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -333,33 +311,25 @@ public final class ZattooSettingsTab implements SettingsTab {
             }
         });
 
-        // Save button
-        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
-        builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.nextRow(2);
-        mSaveBtn = new JButton(mLocalizer.msg("saveBtn", "Save"));
-        mSaveBtn.setEnabled(false);
-        mSaveBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String content = mEditor.getText();
-
-                try {
-                    Properties properties = convertToProperties(content);
-                    properties.store(new FileWriter(mSettings.getCustomChannelProperties()), null);
-                    mSaveBtn.setEnabled(false);
-                } catch (Exception ex) {
-                    JFrame frame = new JFrame("Error");
-                    JOptionPane.showMessageDialog(frame,
-                            ex.getMessage());
-                }
-            }
-        });
-        ButtonBarBuilder buttonBar = new ButtonBarBuilder();
-        buttonBar.addButton(new JButton[]{mSaveBtn});
-        builder.add(buttonBar.getPanel(), cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
         JPanel panel = builder.getPanel();
         Border border = new TitledBorder(mLocalizer.msg("propertyFile", "Configuration file"));
         panel.setBorder(border);
         return panel;
+    }
+
+    private void saveEditor(){
+        String content = mEditor.getText();
+        if (customChannelProperties != null) {
+            try {
+                customChannelProperties.load(content);
+                customChannelProperties.storeProperties();
+                mEditor.setText(customChannelProperties.toString());
+                mSaveBtn.setEnabled(false);
+            } catch (Exception ex) {
+                JFrame frame = new JFrame("Error");
+                JOptionPane.showMessageDialog(frame,
+                        ex.getMessage());
+            }
+        }
     }
 }

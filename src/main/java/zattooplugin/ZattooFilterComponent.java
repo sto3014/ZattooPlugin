@@ -2,7 +2,7 @@ package zattooplugin;
 
 import devplugin.PluginsFilterComponent;
 import devplugin.Program;
-import util.ui.Localizer;
+import util.i18n.Localizer;
 
 import javax.swing.*;
 import java.io.IOException;

@@ -10,13 +10,12 @@ import java.util.Properties;
  * The type Zattoo settings.
  *
  * @author Bodo Tasche, Michael Keppler
- * @since  1.0.0.0
+ * @since 1.0.0.0
  */
 public abstract class ChannelProperties {
     private String mFileName;
     protected Properties mProperties;
     protected boolean isCustom;
-    protected boolean hasErrors = false;
 
     /**
      * Instantiates a new Channel properties.
@@ -36,29 +35,26 @@ public abstract class ChannelProperties {
      * Initialize properties.
      */
     private void initializeProperties() {
-        if (mProperties == null || ( isCustom)) {
+        if (mProperties == null || (isCustom)) {
             InputStream stream;
             if (isCustom) {
                 try {
-                    stream = new FileInputStream(mFileName);
-                } catch (FileNotFoundException e) {
+                    mProperties = new CustomChannelProperties(mFileName).getProperties();
+                } catch (IOException e) {
                     e.printStackTrace();
-                    hasErrors = true;
                     return;
                 }
             } else {
                 stream = getClass().getResourceAsStream(mFileName);
+                try {
+                    mProperties = new Properties();
+                    mProperties.load(stream);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
             }
-            mProperties = new Properties();
-
-            try {
-                mProperties.load(stream);
-            } catch (IOException var3) {
-                var3.printStackTrace();
-                hasErrors = true;
-            }
-            if (!hasErrors)
-                checkProperties();
+            checkProperties();
         }
     }
 
@@ -74,8 +70,6 @@ public abstract class ChannelProperties {
      * @return the property
      */
     public String getProperty(Channel channel) {
-        if (hasErrors)
-            return null;
         try {
             initializeProperties();
             String channelCountry = channel.getBaseCountry();
@@ -114,8 +108,8 @@ public abstract class ChannelProperties {
                     }
                 }
             }
-        } catch (Exception var14) {
-            var14.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
