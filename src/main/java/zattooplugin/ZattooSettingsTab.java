@@ -5,6 +5,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.*;
 import devplugin.SettingsTab;
 import util.i18n.Localizer;
+import util.misc.OperatingSystem;
 import util.ui.UiUtilities;
 
 import javax.swing.*;
@@ -12,10 +13,12 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 /**
@@ -306,13 +309,13 @@ public final class ZattooSettingsTab implements SettingsTab {
         }
         mEditor.setBackground(Color.WHITE);
         mEditor.setOpaque(true);
-//        if (OperatingSystem.isMacOs()) {
-//            InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
-//            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
-//            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
-//            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
-//            mEditor.setInputMap(JComponent.WHEN_FOCUSED, im);
-//        }
+        if (OperatingSystem.isMacOs()) {
+            InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+            mEditor.setInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, im);
+        }
         Document mDocument = mEditor.getDocument();
 
         mDocument.addDocumentListener(new DocumentListener() {
