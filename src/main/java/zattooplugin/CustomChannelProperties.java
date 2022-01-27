@@ -2,8 +2,11 @@ package zattooplugin;
 
 import devplugin.Channel;
 import util.i18n.Localizer;
+import util.misc.OperatingSystem;
 
 import java.io.*;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -15,6 +18,7 @@ import java.util.regex.Pattern;
  */
 public class CustomChannelProperties {
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(CustomChannelProperties.class);
+    private static String propertyPath = null;
 
     private Properties properties = null;
     private File propertyFile = null;
@@ -33,6 +37,43 @@ public class CustomChannelProperties {
         if (propertyFile.exists()) {
             properties.load(new FileInputStream(propertyFile));
         }
+    }
+
+    /**
+     * Gets property path.
+     *
+     * @return the property path
+     */
+    public static String getPropertyPath() {
+        if (propertyPath == null) {
+            String homeDir = System.getProperty("user.home");
+            propertyPath = "";
+            if (OperatingSystem.isMacOs()) {
+                propertyPath = homeDir + "/Library/Application Support/TV-Browser/plugins/ZattooPlugin/";
+            } else {
+                if (OperatingSystem.isWindows()) {
+                    propertyPath = homeDir + "\\AppData\\Roaming\\TV-Browser\\plugins\\ZattooPlugin\\";
+
+                } else {
+                    propertyPath = homeDir + ".config/tvbrowser/plugins/ZattooPlugin/";
+                }
+            }
+        }
+        return propertyPath;
+    }
+
+    public static String encodeToAscii(String utf8){
+        final CharsetEncoder asciiEncoder = StandardCharsets.US_ASCII.newEncoder();
+        final StringBuilder result = new StringBuilder();
+        for (final Character character : utf8.toCharArray()) {
+            if (asciiEncoder.canEncode(character)) {
+                result.append(character);
+            } else {
+                result.append("\\u");
+                result.append(Integer.toHexString(0x10000 | character).substring(1).toUpperCase());
+            }
+        }
+        return  result.toString();
     }
 
     /**
@@ -197,7 +238,7 @@ public class CustomChannelProperties {
         }
         // replace non ascii
         //channelName = channelName.replaceAll("[^\\x00-\\x7F]", ".");
-        channelName = Helper.encodeToAscii(channelName);
+        channelName = encodeToAscii(channelName);
         return channel.getBaseCountry() + "," + channelName;
     }
 
@@ -241,6 +282,10 @@ public class CustomChannelProperties {
         StringTokenizer lines = new StringTokenizer(content, System.lineSeparator());
         Properties props = new Properties();
         int lineNo = 0;
+        String key="";
+        String value="";
+        boolean hasErrors = false;
+        String errorMessages = "";
         while (lines.hasMoreElements()) {
             String line = lines.nextToken().trim();
             lineNo += 1;
@@ -248,25 +293,33 @@ public class CustomChannelProperties {
                 continue;
             if (line.length() == 0)
                 continue;
-            if (line.indexOf("=") != line.lastIndexOf("="))
-                throw new PropertyException(
-                        mLocalizer.msg("error.1.format1", "error.1.format1") + " " + lineNo + ": " +
-                                mLocalizer.msg("error.1.format2", "error.1.format2") + " \"" + line +
-                                "\" " + mLocalizer.msg("error.1.format3", "error.1.format3"));
+            if (line.indexOf("=") != line.lastIndexOf("=")) {
+                errorMessages += mLocalizer.msg("error.1.format1", "error.1.format1") + " " + lineNo + ": " +
+                        mLocalizer.msg("error.1.format2", "error.1.format2") + " \"" + line +
+                        "\" " + mLocalizer.msg("error.1.format3", "error.1.format3") + "\n";
+                hasErrors=true;
+                continue;
+            }
 
             StringTokenizer keyValuePair = new StringTokenizer(line, "=");
             if (keyValuePair.countTokens() == 1) {
-                String key = keyValuePair.nextToken().trim();
-                if (new StringTokenizer(key, ",").countTokens() < 2)
-                    throw new PropertyException(
-                            mLocalizer.msg("error.1.format1", "error.1.format1") + " " + lineNo + ": " +
-                                    mLocalizer.msg("error.1.format2", "error.1.format2") + " \"" + key +
-                                    "\" " + mLocalizer.msg("error.1.format3", "error.1.format3"));
+                key = keyValuePair.nextToken().trim();
 
-                props.put(Helper.encodeToAscii(key), "");
-            } else
-                props.put(Helper.encodeToAscii(keyValuePair.nextToken().trim()), keyValuePair.nextToken().trim());
+            } else {
+                key = keyValuePair.nextToken().trim();
+                value = keyValuePair.nextToken().trim();
+            }
+            if (new StringTokenizer(key, ",").countTokens() < 2) {
+                errorMessages +=  mLocalizer.msg("error.1.format1", "error.1.format1") + " " + lineNo + ": " +
+                                mLocalizer.msg("error.1.format2", "error.1.format2") + " \"" + key +
+                                "\" " + mLocalizer.msg("error.1.format3", "error.1.format3") + "\n";
+                hasErrors=true;
+                continue;
+            }
+            props.put(encodeToAscii(key), value);
         }
+        if ( hasErrors)
+            throw new PropertyException(errorMessages);
         properties = props;
     }
 
@@ -282,7 +335,7 @@ public class CustomChannelProperties {
 
         while (keys.hasMoreElements()) {
             String key = (String) keys.nextElement();
-            String keyUnescaped = Helper.unescape_perl_string(key);
+            String keyUnescaped = Unescape.unescape_perl_string(key);
             content += keyUnescaped + "=" + properties.getProperty(key) + System.lineSeparator();
         }
         return content;

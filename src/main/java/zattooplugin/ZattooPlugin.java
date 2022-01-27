@@ -4,15 +4,12 @@ import devplugin.*;
 import tvbrowser.core.ChannelList;
 import util.browserlauncher.Launch;
 import util.io.IOUtilities;
-import util.misc.OperatingSystem;
 import util.i18n.Localizer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,9 +21,6 @@ import java.util.logging.Logger;
  * @since 1.0.0.0
  */
 public final class ZattooPlugin extends Plugin {
-    private static final String ICON_NAME = "zattoo";
-    private static final String ICON_CATEGORY = "apps";
-    private static final boolean PLUGIN_IS_STABLE = true;
     private static final Version PLUGIN_VERSION = new Version(1, 50, 0, true);
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(ZattooPlugin.class);
     private static final Logger mLog = Logger.getLogger(ZattooPlugin.class.getName());
@@ -35,11 +29,10 @@ public final class ZattooPlugin extends Plugin {
     private ZattooSettings mSettings;
     private PluginsProgramFilter mFilters;
     private ZattooChannelProperties mChannelIds;
-    private final HashSet<Program> mSwitchPrograms = new HashSet();
+    private final HashSet<Program> mSwitchPrograms = new HashSet<>();
     private PluginTreeNode mRootNode;
     private ThemeIcon mThemeIcon;
-    private Timer mTimer;
-    private ProgramReceiveTarget mProgramReceiveTarget;
+    private final ProgramReceiveTarget mProgramReceiveTarget;
     private static CustomChannelProperties customChannelProperties = null;
 
     /**
@@ -65,6 +58,9 @@ public final class ZattooPlugin extends Plugin {
 
     public void loadSettings(Properties properties) {
         mSettings = new ZattooSettings(properties);
+        // Must be explicitly set, because it has a side effect on ZattooChannelProperties.
+        // Same to mSettings.getCustomChannelFileName(), but it will be set
+        // in changeCountry() as well.
         changeCountry(mSettings.getCountry());
     }
 
@@ -153,12 +149,10 @@ public final class ZattooPlugin extends Plugin {
     private ActionMenu getRememberActionMenu(final Program program) {
         AbstractAction action = new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        mSwitchPrograms.add(program);
-                        program.mark(ZattooPlugin.this);
-                        updateRootNode();
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    mSwitchPrograms.add(program);
+                    program.mark(ZattooPlugin.this);
+                    updateRootNode();
                 });
             }
         };
@@ -180,11 +174,7 @@ public final class ZattooPlugin extends Plugin {
     private ActionMenu getSwitchActionMenu(final Channel channel) {
         AbstractAction action = new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        openChannel(channel);
-                    }
-                });
+                SwingUtilities.invokeLater(() -> openChannel(channel));
             }
         };
         action.putValue("Name", mLocalizer.msg("contextMenuSwitch", "Switch channel"));
@@ -267,15 +257,6 @@ public final class ZattooPlugin extends Plugin {
         return getChannelId(channel) != null;
     }
 
-    /**
-     * Can use local player boolean.
-     *
-     * @return the boolean
-     */
-    public static boolean canUseLocalPlayer() {
-        return OperatingSystem.isMacOs() || OperatingSystem.isWindows();
-    }
-
     public boolean canUseProgramTree() {
         return true;
     }
@@ -294,10 +275,8 @@ public final class ZattooPlugin extends Plugin {
      */
     private void updateRootNode() {
         getRootNode().clear();
-        Iterator i$ = mSwitchPrograms.iterator();
 
-        while (i$.hasNext()) {
-            Program program = (Program) i$.next();
+        for (Program program : mSwitchPrograms) {
             mRootNode.addProgramWithoutCheck(program);
         }
 
@@ -313,34 +292,30 @@ public final class ZattooPlugin extends Plugin {
     }
 
     public void handleTvBrowserStartFinished() {
-        mTimer = new Timer(60000, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Date today = new Date();
-                int now = IOUtilities.getMinutesAfterMidnight();
-                int delay = 2;
-                Program startProgram = null;
-                synchronized (mSwitchPrograms) {
-                    Iterator i$ = mSwitchPrograms.iterator();
+        Timer mTimer = new Timer(60000, e -> {
+            Date today = new Date();
+            int now = IOUtilities.getMinutesAfterMidnight();
+            int delay = 2;
+            Program startProgram = null;
+            synchronized (mSwitchPrograms) {
 
-                    while (i$.hasNext()) {
-                        Program program = (Program) i$.next();
-                        if (program.getDate().compareTo(today) == 0) {
-                            int startTime = program.getStartTime();
-                            if (now >= startTime - delay) {
-                                startProgram = program;
-                                break;
-                            }
+                for (Program program : mSwitchPrograms) {
+                    if (program.getDate().compareTo(today) == 0) {
+                        int startTime = program.getStartTime();
+                        if (now >= startTime - delay) {
+                            startProgram = program;
+                            break;
                         }
                     }
-
-                    if (startProgram != null) {
-                        mSwitchPrograms.remove(startProgram);
-                        startProgram.unmark(ZattooPlugin.this);
-                        updateRootNode();
-                        openChannel(startProgram.getChannel());
-                    }
-
                 }
+
+                if (startProgram != null) {
+                    mSwitchPrograms.remove(startProgram);
+                    startProgram.unmark(ZattooPlugin.this);
+                    updateRootNode();
+                    openChannel(startProgram.getChannel());
+                }
+
             }
         });
         mTimer.start();
@@ -355,11 +330,7 @@ public final class ZattooPlugin extends Plugin {
     }
 
     public boolean receivePrograms(int eventType, Program[] programArr, ProgramReceiveTarget receiveTarget) {
-        Program[] arr$ = programArr;
-        int len$ = programArr.length;
-
-        for (int i$ = 0; i$ < len$; ++i$) {
-            Program program = arr$[i$];
+        for (Program program : programArr) {
             if (isProgramSupported(program)) {
                 mSwitchPrograms.add(program);
                 program.mark(this);
@@ -415,7 +386,6 @@ public final class ZattooPlugin extends Plugin {
             JFrame frame = new JFrame(mLocalizer.msg("error", "error"));
             JOptionPane.showMessageDialog(frame,
                     mLocalizer.msg("error.customFile", "error.customFile") + "\n" + e.getMessage());
-            return;
         }
     }
 }

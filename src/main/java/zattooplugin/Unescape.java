@@ -1,149 +1,69 @@
 package zattooplugin;
 
-import util.misc.OperatingSystem;
-
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
-
 /**
- * The type Helper.
  *
- * @author Dieter Stockhausen
- * @since   1.5.0.0
+ * unescape_perl_string()
+ *
+ *      Tom Christiansen <tchrist@perl.com>
+ *      Sun Nov 28 12:55:24 MST 2010
+ *
+ * It's completely ridiculous that there's no standard
+ * unescape_java_string function.  Since I have to do the
+ * damn thing myself, I might as well make it halfway useful
+ * by supporting things Java was too stupid to consider in
+ * strings:
+ *
+ *   => "?" items  are additions to Java string escapes
+ *                 but normal in Java regexes
+ *
+ *   => "!" items  are also additions to Java regex escapes
+ *
+ * Standard singletons: ?\a ?\e \f \n \r \t
+ *
+ *      NB: \b is unsupported as backspace so it can pass-through
+ *          to the regex translator untouched; I refuse to make anyone
+ *          doublebackslash it as doublebackslashing is a Java idiocy
+ *          I desperately wish would die out.  There are plenty of
+ *          other ways to write it:
+ *
+ *              \cH, \12, \012, \x08 \x{8}, \u0008, \U00000008
+ *
+ * Octal escapes: \0 \0N \0NN \N \NN \NNN
+ *    Can range up to !\777 not \377
+ *
+ *      TODO: add !\o{NNNNN}
+ *          last Unicode is 4177777
+ *          maxint is 37777777777
+ *
+ * Control chars: ?\cX
+ *      Means: ord(X) ^ ord('@')
+ *
+ * Old hex escapes: \xXX
+ *      unbraced must be 2 xdigits
+ *
+ * Perl hex escapes: !\x{XXX} braced may be 1-8 xdigits
+ *       NB: proper Unicode never needs more than 6, as highest
+ *           valid codepoint is 0x10FFFF, not maxint 0xFFFFFFFF
+ *
+ * Lame Java escape: \[IDIOT JAVA PREPROCESSOR]uXXXX must be
+ *                   exactly 4 xdigits;
+ *
+ *       I can't write XXXX in this comment where it belongs
+ *       because the damned Java Preprocessor can't mind its
+ *       own business.  Idiots!
+ *
+ * Lame Python escape: !\UXXXXXXXX must be exactly 8 xdigits
+ *
+ * TODO: Perl translation escapes: \Q \U \L \E \[IDIOT JAVA PREPROCESSOR]u \l
+ *       These are not so important to cover if you're passing the
+ *       result to Pattern.compile(), since it handles them for you
+ *       further downstream.  Hm, what about \[IDIOT JAVA PREPROCESSOR]u?
+ *
+ *
+ * @author Tom Christiansen <tchrist@perl.com>
+ * @since 1.5.0.0
  */
-public class Helper {
-    private static String propertyPath = null;
-
-    /**
-     * Gets property path.
-     *
-     * @return the property path
-     */
-    public static String getPropertyPath() {
-        if (propertyPath == null) {
-            String homeDir = System.getProperty("user.home");
-            propertyPath = "";
-            if (OperatingSystem.isMacOs()) {
-                propertyPath = homeDir + "/Library/Application Support/TV-Browser/plugins/ZattooPlugin/";
-            } else {
-                if (OperatingSystem.isWindows()) {
-                    propertyPath = homeDir + "\\AppData\\Roaming\\TV-Browser\\plugins\\ZattooPlugin\\";
-
-                } else {
-                    propertyPath = homeDir + ".config/tvbrowser/plugins/ZattooPlugin/";
-                }
-            }
-        }
-        return propertyPath;
-    }
-
-    /**
-     * Help text to tooltip string.
-     *
-     * @param helpText      the help text
-     * @param maxLineLength the max line length
-     * @return the string
-     */
-    public static String helpTextToTooltip(String helpText, int maxLineLength) {
-        helpText = helpText.trim();
-        if (helpText.indexOf(' ') < 0 || helpText.indexOf(' ') > maxLineLength)
-            return helpText;
-
-        String tooltip = "";
-        int foundLast = 0;
-        int len = helpText.length();
-        while (true) {
-            int foundCurrent = helpText.lastIndexOf(' ', foundLast + maxLineLength);
-            if (foundCurrent == -1 || foundCurrent == foundLast) {
-                tooltip += helpText.substring(foundLast, foundLast + maxLineLength).trim() + "-<br>";
-                foundLast = foundLast + maxLineLength;
-            } else {
-                tooltip += helpText.substring(foundLast, foundCurrent).trim() + "<br>";
-                foundLast = foundCurrent;
-                if (len - foundCurrent < maxLineLength) {
-                    tooltip += helpText.substring(foundCurrent).trim();
-                    return "<html>" + tooltip + "</html>";
-                }
-            }
-        }
-    }
-
-    public static String encodeToAscii(String utf8){
-        final CharsetEncoder asciiEncoder = StandardCharsets.US_ASCII.newEncoder();
-        final StringBuilder result = new StringBuilder();
-        for (final Character character : utf8.toCharArray()) {
-            if (asciiEncoder.canEncode(character)) {
-                result.append(character);
-            } else {
-                result.append("\\u");
-                result.append(Integer.toHexString(0x10000 | character).substring(1).toUpperCase());
-            }
-        }
-        return  result.toString();
-    }
-
-    /*
-     *
-     * unescape_perl_string()
-     *
-     *      Tom Christiansen <tchrist@perl.com>
-     *      Sun Nov 28 12:55:24 MST 2010
-     *
-     * It's completely ridiculous that there's no standard
-     * unescape_java_string function.  Since I have to do the
-     * damn thing myself, I might as well make it halfway useful
-     * by supporting things Java was too stupid to consider in
-     * strings:
-     *
-     *   => "?" items  are additions to Java string escapes
-     *                 but normal in Java regexes
-     *
-     *   => "!" items  are also additions to Java regex escapes
-     *
-     * Standard singletons: ?\a ?\e \f \n \r \t
-     *
-     *      NB: \b is unsupported as backspace so it can pass-through
-     *          to the regex translator untouched; I refuse to make anyone
-     *          doublebackslash it as doublebackslashing is a Java idiocy
-     *          I desperately wish would die out.  There are plenty of
-     *          other ways to write it:
-     *
-     *              \cH, \12, \012, \x08 \x{8}, \u0008, \U00000008
-     *
-     * Octal escapes: \0 \0N \0NN \N \NN \NNN
-     *    Can range up to !\777 not \377
-     *
-     *      TODO: add !\o{NNNNN}
-     *          last Unicode is 4177777
-     *          maxint is 37777777777
-     *
-     * Control chars: ?\cX
-     *      Means: ord(X) ^ ord('@')
-     *
-     * Old hex escapes: \xXX
-     *      unbraced must be 2 xdigits
-     *
-     * Perl hex escapes: !\x{XXX} braced may be 1-8 xdigits
-     *       NB: proper Unicode never needs more than 6, as highest
-     *           valid codepoint is 0x10FFFF, not maxint 0xFFFFFFFF
-     *
-     * Lame Java escape: \[IDIOT JAVA PREPROCESSOR]uXXXX must be
-     *                   exactly 4 xdigits;
-     *
-     *       I can't write XXXX in this comment where it belongs
-     *       because the damned Java Preprocessor can't mind its
-     *       own business.  Idiots!
-     *
-     * Lame Python escape: !\UXXXXXXXX must be exactly 8 xdigits
-     *
-     * TODO: Perl translation escapes: \Q \U \L \E \[IDIOT JAVA PREPROCESSOR]u \l
-     *       These are not so important to cover if you're passing the
-     *       result to Pattern.compile(), since it handles them for you
-     *       further downstream.  Hm, what about \[IDIOT JAVA PREPROCESSOR]u?
-     *
-     */
-
+public class Unescape {
     public static String unescape_perl_string(String oldstr) {
 
         /*
@@ -430,6 +350,4 @@ public class Helper {
     void die(String foa) {
         throw new IllegalArgumentException(foa);
     }
-
-
 }
