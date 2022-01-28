@@ -26,7 +26,7 @@ Manuall installation
 ---
 
 1. Download the file ZattooPlugin.jar from
-   [GitHub](https://github.com/sto3014/TV-Browser-Zattoo/raw/main/target/ZattooPlugin.jar).
+   [GitHub](https://github.com/sto3014/ZattooPlugin/raw/main/target/ZattooPlugin.jar).
 2. Copy the file into the TV-Browser plugin directory:
 
 | Operating System| Path|   
