@@ -83,6 +83,7 @@ settings panel. If your prefer, you can edit it in a text editor of your choice.
 |Windows 7+|C:\Users\[username]\AppData\Roaming\TV-Browser-ZattooPlugin\channels_custom.properties   |
 |Mac OS X|/users/[username]/Library/Preferences/TV-Browser-ZattooPlugin/channels_custom.properties |
 |Linux| /home/[username]/.config/TV-Browser-ZattooPlugin/channels_custom.properties    |
+|Others| /home/[username]/.tvbrowser-zattooplugin/channels_custom.properties    |
 
 
 If there is a format error in your file, only the correct entries will be used. But you can see all entries in the
