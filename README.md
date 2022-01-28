@@ -7,7 +7,7 @@ The current plugin is based on their work.
 
 ---
 
-* Opens current programs in Zattoo
+* Opens current program in Zattoo
 * Mark programs to be opened in Zattoo on start.
 * New in 1.5: Country channel list for Austria
 * New in 1.5: Create your own channel list
@@ -16,9 +16,13 @@ The current plugin is based on their work.
 
 ---
 
-* TV-Browser 4.2.4+
+* TV-Browser 4.2.4+  
+  The plugin was only tested under 4.2.4. The TV-Browers library is of version 3.2.1. I.e., this plugin should run on 
+  older versions as well.
 * Windows 7+ and maxOS is supported.
-* Linux should work but wasn't tested.
+* Linux not tested.
+* Others not tested.
+
 
 ## Installation
 
@@ -31,9 +35,11 @@ Manuall installation
 
 | Operating System| Path|   
 |----|----|   
-| Windows 7, 8, 8.1, 10 | C:\User\[user name]\AppData\Roaming\TV-Browser\[TV-Browser version]\plugins|   
-| Mac OS X| /Users/[user name]/Library/Application Support/TV-Browser/plugins|  
-| Linux| /home/[user name]/.tvbrowser/ (until 4.2) <br /> /home/[user name]/.config/tvbrowser/ (since 4.2.1)|  
+| Windows 7+ | C:\Users\[username]\AppData\Roaming\TV-Browser\[TV-Browser version]\plugins|   
+| Mac OS X| /Users/[username]/Library/Application Support/TV-Browser/plugins|  
+| Linux| /home/[username]/.tvbrowser/plugins (until 4.2) <br /> /home/[username]/.config/tvbrowser/plugins (since 4.2.1)|  
+| Others| /home/[username]/.tvbrowser/plugins |  
+
 
 See also [Wiki TV-Browser](https://wiki.tvbrowser.org/index.php/Homeverzeichnis)
 
@@ -68,6 +74,19 @@ So, if your country is not listed at all, or if not all of your channels are val
 the `Own channel list`. This list is empty by default, and you must set it up. To do so, please follow the 
 instructions in the `Create your own channel list` and `Adopt your own channel list` area in the TV-Browser
 settings panel.
+
+Your own channel list is stored in a file. Yan can edit/save it in the `Adopt your own channel list` area in the TV-Browser
+settings panel. If your prefer, you can edit it in a text editor of your choice.
+
+|    Operating system |Customized channel file     |
+|------|-----|
+|Windows 7+|C:\Users\[username]\AppData\Roaming\TV-Browser-ZattooPlugin\channels_custom.properties   |
+|Mac OS X|/users/[username]/Library/Preferences/TV-Browser-ZattooPlugin/channels_custom.properties |
+|Linux| /home/[username]/.config/TV-Browser-ZattooPlugin/channels_custom.properties    |
+
+
+If there is a format error in your file, only the correct entries will be used. But you can see all entries in the
+plugin-settings. If you store the file here the plugin tells you the lines which are not valid.
 
 
 ## Acknowledgements

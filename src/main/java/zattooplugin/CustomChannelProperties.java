@@ -49,20 +49,23 @@ public class CustomChannelProperties {
             String homeDir = System.getProperty("user.home");
             propertyPath = "";
             if (OperatingSystem.isMacOs()) {
-                propertyPath = homeDir + "/Library/Application Support/TV-Browser/plugins/ZattooPlugin/";
+                propertyPath = homeDir + "/Library/Preferences/TV-Browser-ZattooPlugin/";
             } else {
                 if (OperatingSystem.isWindows()) {
-                    propertyPath = homeDir + "\\AppData\\Roaming\\TV-Browser\\plugins\\ZattooPlugin\\";
-
+                    propertyPath = homeDir + "\\AppData\\Roaming\\TV-Browser-ZattooPlugin\\";
                 } else {
-                    propertyPath = homeDir + ".config/tvbrowser/plugins/ZattooPlugin/";
+                    if (OperatingSystem.isLinux()) {
+                        propertyPath = homeDir + "/.config/tvbrowser-zattooplugin/";
+                    } else {
+                        propertyPath = homeDir + "/.tvbrowser-zattooplugin/";
+                    }
                 }
             }
         }
         return propertyPath;
     }
 
-    public static String encodeToAscii(String utf8){
+    public static String encodeToAscii(String utf8) {
         final CharsetEncoder asciiEncoder = StandardCharsets.US_ASCII.newEncoder();
         final StringBuilder result = new StringBuilder();
         for (final Character character : utf8.toCharArray()) {
@@ -73,7 +76,7 @@ public class CustomChannelProperties {
                 result.append(Integer.toHexString(0x10000 | character).substring(1).toUpperCase());
             }
         }
-        return  result.toString();
+        return result.toString();
     }
 
     /**
@@ -282,8 +285,8 @@ public class CustomChannelProperties {
         StringTokenizer lines = new StringTokenizer(content, System.lineSeparator());
         Properties props = new Properties();
         int lineNo = 0;
-        String key="";
-        String value="";
+        String key = "";
+        String value = "";
         boolean hasErrors = false;
         String errorMessages = "";
         while (lines.hasMoreElements()) {
@@ -297,7 +300,7 @@ public class CustomChannelProperties {
                 errorMessages += mLocalizer.msg("error.1.format1", "error.1.format1") + " " + lineNo + ": " +
                         mLocalizer.msg("error.1.format2", "error.1.format2") + " \"" + line +
                         "\" " + mLocalizer.msg("error.1.format3", "error.1.format3") + "\n";
-                hasErrors=true;
+                hasErrors = true;
                 continue;
             }
 
@@ -310,15 +313,15 @@ public class CustomChannelProperties {
                 value = keyValuePair.nextToken().trim();
             }
             if (new StringTokenizer(key, ",").countTokens() < 2) {
-                errorMessages +=  mLocalizer.msg("error.1.format1", "error.1.format1") + " " + lineNo + ": " +
-                                mLocalizer.msg("error.1.format2", "error.1.format2") + " \"" + key +
-                                "\" " + mLocalizer.msg("error.1.format3", "error.1.format3") + "\n";
-                hasErrors=true;
+                errorMessages += mLocalizer.msg("error.1.format1", "error.1.format1") + " " + lineNo + ": " +
+                        mLocalizer.msg("error.1.format2", "error.1.format2") + " \"" + key +
+                        "\" " + mLocalizer.msg("error.1.format3", "error.1.format3") + "\n";
+                hasErrors = true;
                 continue;
             }
             props.put(encodeToAscii(key), value);
         }
-        if ( hasErrors)
+        if (hasErrors)
             throw new PropertyException(errorMessages);
         properties = props;
     }

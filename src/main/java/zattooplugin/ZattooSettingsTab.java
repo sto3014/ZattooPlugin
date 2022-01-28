@@ -137,7 +137,7 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.setRow(builder.getRowCount());
-        JTextArea textGeneralHint = UiUtilities.createHelpTextArea(mLocalizer.msg("countryHint", "countryHint"));
+        JEditorPane textGeneralHint = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("countryHint", "countryHint"));
         builder.add(textGeneralHint, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
         ZattooCountry[] countries = new ZattooCountry[]{
