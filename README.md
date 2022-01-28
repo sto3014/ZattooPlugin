@@ -1,22 +1,22 @@
 # Zattoo plugin for TV-Browser
 
 Zattoo Plugin 1.0 was developed by Bodo Tasche and Michael Keppler but after version 1.0.2.0 no longer maintained.
-The current plugin is based on this code.
+The current plugin is based on their work.
 
 ## Features
 
 ---
 
-* Opens current program in Zattoo
+* Opens current programs in Zattoo
 * Mark programs to be opened in Zattoo on start.
 * New in 1.5: Country channel list for Austria
-* New in 1.5: You can create your own channel
+* New in 1.5: Create your own channel list
 
 ## Requirements
 
 ---
 
-* TV-Browser 3.2.1+
+* TV-Browser 4.2.4+
 * Windows 7+ and maxOS is supported.
 * Linux should work but wasn't tested.
 
