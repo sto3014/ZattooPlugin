@@ -6,9 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Reverse engineering of original Zattoo Plugin 1.0.2.0 from Bodo Tasche and Michael Keppler.
+
 ## [1.0.3.0]
 
-Reverse engineering of original Zattoo Plugin 1.0.2.0 from Bodo Tasche and Michael Keppler.
 This version was never be made available for public.
 
 ### Added
