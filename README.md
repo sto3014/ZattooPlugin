@@ -47,24 +47,22 @@ See also [Wiki TV-Browser](https://wiki.tvbrowser.org/index.php/Homeverzeichnis)
 
 3. Restart TV-Browser
 4. Confirm installation was successful
-* Go to TV-Browser preferences
-* Under plugins you should see an entry named `Zattoo`  
+    * Go to TV-Browser preferences
+    * Under `Plugins` you should see an entry named `Zattoo`  
   <img src="./images/Preferences.png" width="200"/>
-
-
+      
 ## Usage
 
 ---
 ### Connect to Zattoo
-Click with the right mouse button on a programm, you get new popup menu:
+With the right mouse button click on a program. The popup dialog shows Zattoo menus:
 
 * For programs which are currently running you get `Open in Zattoo now`  
-  <img src="./images/OpenInZattoo.png" width="400"/>
-
+  <img src="./images/OpenInZattoo.png" width="400"/>  
   This menu opens a new page in your web-browser and displays the channel in Zattoo
 * For programs which are not started yet you get `Open in Zattoo on start`  
-  <img src="./images/OpenInZatooOnStart.png" width="400"/>
-  When the program start, a new page will be opened in your web-browser and displays the channel in Zattoo.
+  <img src="./images/OpenInZatooOnStart.png" width="400"/>  
+  When the program starts, a new page will be opened in your web-browser and displays the channel in Zattoo.
   Remarks: This information will not be stored when TV-Browser is closed.  
   
 If you do not get the expected Zattoo menu, you must use a different channel list. See [Plugin Settings](#plugin_settings) for details.
