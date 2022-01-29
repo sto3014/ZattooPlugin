@@ -150,7 +150,7 @@ settings panel.
 
 ### My country is not available as a predefined channel list
 Same procedure as if only some channels are missing 
-[My country is not available as a predefined channel list](#some-programs-are-not-available-for-zattoo).  
+[Some programs are not available for Zattoo](#some-programs-are-not-available-for-zattoo).  
 Yes, you must select a channel list as `source`, even if you expect that it will not fit at all. As a result, all
 channels which you described are included in your own channels list, but maybe without any Zattoo channel names.
 
