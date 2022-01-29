@@ -65,7 +65,7 @@ With the right mouse button click on a program. The popup dialog shows Zattoo me
   When the program starts, a new page will be opened in your web-browser and displays the channel in Zattoo.
   Remarks: This information will not be stored when TV-Browser is closed.  
   
-If you do not get the expected Zattoo menu, you must use a different channel list. See [Plugin Settings](#plugin_settings) for details.
+If you do not get the expected Zattoo menu, you must use a different channel list. See [Plugin Settings](#plugin-settings) for details.
 
 ### Filters
 
@@ -143,14 +143,14 @@ are provided by Zattoo for Austria were included:
 * ZDF
 * ZDF Neo
 
-### Some programs (channels) are not available for Zattoo
+### Some programs are not available for Zattoo
 You need to use your own channel list. Please go to your plugin settings in TV-Browser and follow the
 instructions in the `Create your own channel list` and `Adopt your own channel list` area in the TV-Browser
 settings panel.
 
 ### My country is not available as a predefined channel list
 Same procedure as if only some channels are missing 
-[My country is not available as a predefined channel list](#my_country_is_not_available_as_a_predefined_channel_list).  
+[My country is not available as a predefined channel list](#some-programs-are-not-available-for-zattoo).  
 Yes, you must select a channel list as `source`, even if you expect that it will not fit at all. As a result, all
 channels which you described are included in your own channels list, but maybe without any Zattoo channel names.
 
