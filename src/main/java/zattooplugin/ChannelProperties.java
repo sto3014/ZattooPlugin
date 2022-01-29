@@ -21,12 +21,11 @@ public abstract class ChannelProperties {
      * Instantiates a new Channel properties.
      *
      * @param country                 the country
-     * @param customChannelProperties the custom channel properties
      */
-    protected ChannelProperties(String country, String customChannelProperties) {
+    protected ChannelProperties(String country) {
         isCustom = country.equals("custom");
         if (isCustom) {
-            mFileName = customChannelProperties;
+            mFileName = CustomChannelProperties.PROPERTY_FILE_NAME;
         } else
             mFileName = "channels_" + country + ".properties";
     }
@@ -39,7 +38,7 @@ public abstract class ChannelProperties {
             InputStream stream;
             if (isCustom) {
                 try {
-                    mProperties = new CustomChannelProperties(mFileName).getProperties();
+                    mProperties = new CustomChannelProperties().getProperties();
                 } catch (IOException e) {
                     e.printStackTrace();
                     return;

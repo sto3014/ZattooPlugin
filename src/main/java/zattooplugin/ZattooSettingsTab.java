@@ -243,7 +243,7 @@ public final class ZattooSettingsTab implements SettingsTab {
     private JPanel createFilePanel() {
         CellConstraints cc = new CellConstraints();
         try {
-            mCustomChannelProperties = new CustomChannelProperties(mSettings.getCustomChannelFileName());
+            mCustomChannelProperties = new CustomChannelProperties();
         } catch (IOException e) {
             JFrame frame = new JFrame(mLocalizer.msg("error", "error"));
             JOptionPane.showMessageDialog(frame,
@@ -294,7 +294,7 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(2);
-        JLabel labelPropertyFile = new JLabel(mSettings.getCustomChannelFileName());
+        JLabel labelPropertyFile = new JLabel(CustomChannelProperties.PROPERTY_FILE_NAME);
         builder.add(labelPropertyFile, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
 

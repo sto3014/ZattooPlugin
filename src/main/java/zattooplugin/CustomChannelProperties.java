@@ -1,6 +1,7 @@
 package zattooplugin;
 
 import devplugin.Channel;
+import tvbrowser.core.Settings;
 import util.i18n.Localizer;
 import util.misc.OperatingSystem;
 
@@ -18,51 +19,25 @@ import java.util.regex.Pattern;
  */
 public class CustomChannelProperties {
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(CustomChannelProperties.class);
-    private static String propertyPath = null;
 
     private Properties properties = null;
     private File propertyFile = null;
     private static final char[] specialChars = {'.', '^', '$', '*', '+', '-', '?', '(', ')', '[', ']', '{', '}', '|', '—', '/'};
 
+    public static final String PROPERTY_FILE_NAME = Settings.getUserSettingsDirName() + File.separator +
+            "java." + CustomChannelProperties.class.getCanonicalName() + ".prop";
 
     /**
      * Instantiates a new Custom channel properties.
      *
-     * @param fileName the file name
      * @throws IOException the io exception
      */
-    public CustomChannelProperties(String fileName) throws IOException {
-        propertyFile = new File(fileName);
+    public CustomChannelProperties() throws IOException {
+        propertyFile = new File( PROPERTY_FILE_NAME);
         properties = new Properties();
         if (propertyFile.exists()) {
             properties.load(new FileInputStream(propertyFile));
         }
-    }
-
-    /**
-     * Gets property path.
-     *
-     * @return the property path
-     */
-    public static String getPropertyPath() {
-        if (propertyPath == null) {
-            String homeDir = System.getProperty("user.home");
-            propertyPath = "";
-            if (OperatingSystem.isMacOs()) {
-                propertyPath = homeDir + "/Library/Preferences/TV-Browser-ZattooPlugin/";
-            } else {
-                if (OperatingSystem.isWindows()) {
-                    propertyPath = homeDir + "\\AppData\\Roaming\\TV-Browser-ZattooPlugin\\";
-                } else {
-                    if (OperatingSystem.isLinux()) {
-                        propertyPath = homeDir + "/.config/tvbrowser-zattooplugin/";
-                    } else {
-                        propertyPath = homeDir + "/.tvbrowser-zattooplugin/";
-                    }
-                }
-            }
-        }
-        return propertyPath;
     }
 
     public static String encodeToAscii(String utf8) {

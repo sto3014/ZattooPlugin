@@ -13,10 +13,9 @@ public class ZattooChannelProperties extends ChannelProperties {
     * Instantiates a new Zattoo channel properties.
     *
     * @param country                 the country
-    * @param customChannelProperties the custom channel properties
     */
-   public ZattooChannelProperties(String country, String customChannelProperties ) {
-      super(country, customChannelProperties);
+   public ZattooChannelProperties(String country ) {
+      super(country);
    }
 
    protected void checkProperties() {

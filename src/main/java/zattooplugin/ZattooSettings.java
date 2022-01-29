@@ -6,12 +6,11 @@ import java.util.Properties;
  * The type Zattoo settings.
  *
  * @author Bodo Tasche, Michael Keppler
- * @since  1.0.0.0
+ * @since 1.0.0.0
  */
 public class ZattooSettings {
     private static final String KEY_COUNTRY = "COUNTRY";
     private static final String KEY_SOURCE_COUNTRY = "SOURCE_COUNTRY";
-    private static final String KEY_CUSTOM_CHANNEL_FILE_NAME = "CUSTOM_CHANNEL_FILE_NAME";
     private static final String KEY_UPDATE = "UPDATE";
     public static final int UPDATE_BY_REPLACE = 0;
     public static final int UPDATE_BY_MERGE = 1;
@@ -29,58 +28,27 @@ public class ZattooSettings {
     public ZattooSettings(Properties properties) {
         mProperties = properties;
 
-        // for testing purpose only
-        boolean reset = false;
-
-        if (mProperties.getProperty(KEY_COUNTRY) == null || reset)
+        if (mProperties.getProperty(KEY_COUNTRY) == null)
             mProperties.setProperty(KEY_COUNTRY, "de");
 
-        if (mProperties.getProperty(KEY_SOURCE_COUNTRY) == null || reset)
+        if (mProperties.getProperty(KEY_SOURCE_COUNTRY) == null)
             mProperties.setProperty(KEY_SOURCE_COUNTRY, "de");
 
-
-        if (mProperties.getProperty(KEY_CUSTOM_CHANNEL_FILE_NAME) == null || reset)
-            mProperties.setProperty(KEY_CUSTOM_CHANNEL_FILE_NAME, CustomChannelProperties.getPropertyPath()
-                    + "channels_custom.properties" );
-
-        if (mProperties.getProperty(KEY_UPDATE) == null || reset)
+        if (mProperties.getProperty(KEY_UPDATE) == null)
             mProperties.setProperty(KEY_UPDATE, Integer.toString(UPDATE_BY_REPLACE));
 
-        if (mProperties.getProperty(KEY_MERGE) == null || reset)
+        if (mProperties.getProperty(KEY_MERGE) == null)
             mProperties.setProperty(KEY_MERGE, Integer.toString(MERGE_AND_REPLACE));
 
         deleteOldProperties();
     }
 
-    private void deleteOldProperties(){
+    private void deleteOldProperties() {
         // since 1.0.3.0
         final String KEY_PLAYER = "PLAYER";
 
-        // since 1.5.0.0
-        final String KEY_LEARN_MODE = "LEARN_MODE";
-        final String KEY_ADD_NEW_CHANNELS = "ADD_NEW_CHANNELS";
-        final String KEY_REREAD_CUSTOM_CHANNEL_PROPERTIES = "REREAD_CUSTOM_CHANNEL_PROPERTIES";
-        final String KEY_SHOW_HELP_AS_TOOLTIP = "SHOW_HELP_AS_TOOLTIP";
-        final String KEY_CUSTOM_CHANNEL_PROPERTIES= "CUSTOM_CHANNEL_PROPERTIES";
-
         if (mProperties.getProperty(KEY_PLAYER) != null)
             mProperties.remove(KEY_PLAYER);
-
-        if (mProperties.getProperty(KEY_LEARN_MODE) != null)
-            mProperties.remove(KEY_LEARN_MODE);
-
-        if (mProperties.getProperty(KEY_REREAD_CUSTOM_CHANNEL_PROPERTIES) != null)
-            mProperties.remove(KEY_REREAD_CUSTOM_CHANNEL_PROPERTIES);
-
-        if (mProperties.getProperty(KEY_ADD_NEW_CHANNELS) != null)
-            mProperties.remove(KEY_ADD_NEW_CHANNELS);
-
-        if (mProperties.getProperty(KEY_SHOW_HELP_AS_TOOLTIP) != null)
-            mProperties.remove(KEY_SHOW_HELP_AS_TOOLTIP);
-
-        if (mProperties.getProperty(KEY_CUSTOM_CHANNEL_PROPERTIES) != null)
-            mProperties.remove(KEY_CUSTOM_CHANNEL_PROPERTIES);
-
     }
 
     /**
@@ -127,16 +95,6 @@ public class ZattooSettings {
     public void setSourceCountry(String sourceCountry) {
         mProperties.setProperty(KEY_SOURCE_COUNTRY, sourceCountry);
     }
-
-    /**
-     * Gets custom channel properties.
-     *
-     * @return the custom channel properties
-     */
-    public String getCustomChannelFileName() {
-        return mProperties.getProperty(KEY_CUSTOM_CHANNEL_FILE_NAME);
-    }
-
 
     /**
      * Sets update.

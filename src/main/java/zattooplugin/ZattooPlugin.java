@@ -71,7 +71,7 @@ public final class ZattooPlugin extends Plugin {
      */
     public void changeCountry(String country) {
         mSettings.setCountry(country);
-        mChannelIds = new ZattooChannelProperties(country, mSettings.getCustomChannelFileName());
+        mChannelIds = new ZattooChannelProperties(country);
     }
 
     /**
@@ -362,7 +362,7 @@ public final class ZattooPlugin extends Plugin {
         Channel[] channels = ChannelList.getSubscribedChannels();
         try {
             if (customChannelProperties == null)
-                customChannelProperties = new CustomChannelProperties(mSettings.getCustomChannelFileName());
+                customChannelProperties = new CustomChannelProperties();
             if (replace) {
                 customChannelProperties.clear(false);
             }
