@@ -1,6 +1,8 @@
 package zattooplugin;
 
 import devplugin.Channel;
+import devplugin.Program;
+import tvbrowser.core.ChannelList;
 import tvbrowser.core.Settings;
 import util.i18n.Localizer;
 import util.misc.OperatingSystem;
@@ -10,6 +12,7 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * The type Custom channel properties.
@@ -24,8 +27,12 @@ public class CustomChannelProperties {
     private File propertyFile = null;
     private static final char[] specialChars = {'.', '^', '$', '*', '+', '-', '?', '(', ')', '[', ']', '{', '}', '|', '—', '/'};
 
+    public static final String COUNTRY_CODE = "custom";
+
     public static final String PROPERTY_FILE_NAME = Settings.getUserSettingsDirName() + File.separator +
             "java." + CustomChannelProperties.class.getCanonicalName() + ".prop";
+    public static final String CHANNEL_FILE_NAME = Settings.getUserSettingsDirName() + File.separator +
+            "java." + CustomChannelProperties.class.getCanonicalName() + ".txt";
 
     /**
      * Instantiates a new Custom channel properties.
@@ -33,7 +40,7 @@ public class CustomChannelProperties {
      * @throws IOException the io exception
      */
     public CustomChannelProperties() throws IOException {
-        propertyFile = new File( PROPERTY_FILE_NAME);
+        propertyFile = new File(PROPERTY_FILE_NAME);
         properties = new Properties();
         if (propertyFile.exists()) {
             properties.load(new FileInputStream(propertyFile));
@@ -210,7 +217,7 @@ public class CustomChannelProperties {
      */
     private String getKey(Channel channel) {
         // mask regex chars
-        String channelName = channel.getDefaultName();
+        String channelName = channel.getId();
         for (char specialChar : specialChars) {
             channelName = channelName.replaceAll(Pattern.quote(specialChar + ""), "\\\\" + specialChar);
         }
@@ -218,6 +225,10 @@ public class CustomChannelProperties {
         //channelName = channelName.replaceAll("[^\\x00-\\x7F]", ".");
         channelName = encodeToAscii(channelName);
         return channel.getBaseCountry() + "," + channelName;
+    }
+
+    public String getProperty(Channel channel){
+        return properties.getProperty(getKey(channel));
     }
 
     /**
@@ -246,6 +257,33 @@ public class CustomChannelProperties {
             }
         }
         properties.store(new FileWriter(propertyFile), null);
+
+        File channelFile = new File(CHANNEL_FILE_NAME);
+        if (!channelFile.exists()) {
+            File parentFile = channelFile.getParentFile();
+            if (!parentFile.exists()) {
+                if (!parentFile.mkdirs()) {
+                    throw new IOException("Folder " + parentFile.getAbsolutePath() + " could not be created.");
+                }
+            }
+        }
+        PrintWriter printWriter = new PrintWriter(channelFile);
+
+        List<Channel> sortedList = Arrays.stream(ChannelList.getAvailableChannels()).sorted((o1, o2)
+                -> o1.getId().toLowerCase().compareTo(o2.getId().toLowerCase())).collect(Collectors.toList());
+
+        for (Channel channel : sortedList) {
+            String key = getKey(channel);
+            if (properties.getProperty(key) != null) {
+                String serviceID = channel.getDataServiceId();
+                int idx = serviceID.indexOf(".");
+                if (idx > 0)
+                    serviceID = serviceID.substring(0, idx);
+                printWriter.println(serviceID + ":" + channel.getGroup().getId() + ":" + channel.getId());
+            }
+        }
+        printWriter.close();
+
         return true;
     }
 
@@ -282,7 +320,7 @@ public class CustomChannelProperties {
             StringTokenizer keyValuePair = new StringTokenizer(line, "=");
             if (keyValuePair.countTokens() == 1) {
                 key = keyValuePair.nextToken().trim();
-
+                value="";
             } else {
                 key = keyValuePair.nextToken().trim();
                 value = keyValuePair.nextToken().trim();
@@ -305,14 +343,11 @@ public class CustomChannelProperties {
         String content = "";
         Enumeration keys = properties.propertyNames();
         Vector<String> keyList = new Vector<String>();
-        while (keys.hasMoreElements()) {
-            keyList.add((String) keys.nextElement());
-        }
-        Collections.sort(keyList);
-        keys = keyList.elements();
+        while (keys.hasMoreElements()) keyList.add((String) keys.nextElement());
 
-        while (keys.hasMoreElements()) {
-            String key = (String) keys.nextElement();
+        List<String> sortedList = keyList.stream().sorted((o1, o2) -> o1.toLowerCase().compareTo(o2.toLowerCase())).collect(Collectors.toList());
+
+        for (String key : sortedList) {
             String keyUnescaped = Unescape.unescape_perl_string(key);
             content += keyUnescaped + "=" + properties.getProperty(key) + System.lineSeparator();
         }

@@ -35,10 +35,10 @@ public class ZattooSettings {
             mProperties.setProperty(KEY_SOURCE_COUNTRY, "de");
 
         if (mProperties.getProperty(KEY_UPDATE) == null)
-            mProperties.setProperty(KEY_UPDATE, Integer.toString(UPDATE_BY_REPLACE));
+            mProperties.setProperty(KEY_UPDATE, Integer.toString(UPDATE_BY_MERGE));
 
         if (mProperties.getProperty(KEY_MERGE) == null)
-            mProperties.setProperty(KEY_MERGE, Integer.toString(MERGE_AND_REPLACE));
+            mProperties.setProperty(KEY_MERGE, Integer.toString(MERGE_ONLY_NEW));
 
         deleteOldProperties();
     }

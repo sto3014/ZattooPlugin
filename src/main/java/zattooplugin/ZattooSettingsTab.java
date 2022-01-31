@@ -3,7 +3,9 @@ package zattooplugin;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.*;
+import devplugin.Channel;
 import devplugin.SettingsTab;
+import tvbrowser.core.ChannelList;
 import util.i18n.Localizer;
 import util.misc.OperatingSystem;
 import util.ui.UiUtilities;
@@ -13,6 +15,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import java.awt.*;
@@ -38,9 +41,13 @@ public final class ZattooSettingsTab implements SettingsTab {
     private JTextArea mEditor;
     private JButton mSaveBtn;
     private JButton mResetBtn;
+    private JButton mUpdateBtn;
+
     private JRadioButton mUpdateByReplace;
     private JRadioButton mMergeAndReplace;
     private CustomChannelProperties mCustomChannelProperties;
+
+    private JPanel mFilePanel;
 
 
     /**
@@ -91,25 +98,40 @@ public final class ZattooSettingsTab implements SettingsTab {
                         , "pref,10dlu,pref,10dlu,pref"), new JPanel());
         builderMain.add(createCountryPanel(), cc.xy(1, 1));
         builderMain.add(createCustomChannelPanel(), cc.xy(1, 3));
-        builderMain.add(createFilePanel(), cc.xy(1, 5));
+        mFilePanel = createFilePanel();
+        builderMain.add(mFilePanel, cc.xy(1, 5));
         return builderMain.getPanel();
     }
 
     public void saveSettings() {
         if (mSaveBtn.isEnabled()) {
-            if (saveEditor(mEditor, mCustomChannelProperties))
+            if (saveEditor(mEditor, mCustomChannelProperties)) {
+                JFrame frame = new JFrame("Info");
+                JOptionPane.showMessageDialog(frame,
+                        mLocalizer.msg("saveOnExit", "saveOnExit"));
                 mSaveBtn.setEnabled(false);
+            }
         }
         String currentCountry = ((ZattooCountry) mCountry.getSelectedItem()).getCode();
         String sourceCountry = ((ZattooCountry) mSourceCountry.getSelectedItem()).getCode();
+
         if (mUpdateCustomChannels.isSelected()) {
-            ZattooPlugin.getInstance().changeCountry(sourceCountry);
-            ZattooPlugin.getInstance().updateCustomChannels(mUpdateByReplace.isSelected(), mMergeAndReplace.isSelected());
+            JFrame frame = new JFrame("Error");
+            JOptionPane.showMessageDialog(frame,
+                    mLocalizer.msg("noUpdateOnExit", "saveBeforeUpdate"));
+            mUpdateCustomChannels.setEnabled(false);
+            mUpdateBtn.setEnabled(false);
+            return;
         }
-        ZattooPlugin.getInstance().changeCountry(currentCountry);
-        ZattooPlugin.getInstance().changeSourceCountry(sourceCountry);
-        ZattooPlugin.getInstance().changeUpdate(mUpdateByReplace.isSelected() ? ZattooSettings.UPDATE_BY_REPLACE : ZattooSettings.UPDATE_BY_MERGE);
-        ZattooPlugin.getInstance().changeMerge(mMergeAndReplace.isSelected() ? ZattooSettings.MERGE_AND_REPLACE : ZattooSettings.MERGE_ONLY_NEW);
+
+        if (!mSettings.getCountry().equals(currentCountry))
+            ZattooPlugin.getInstance().changeCountry(currentCountry);
+        if (!mSettings.getSourceCountry().equals(sourceCountry))
+            ZattooPlugin.getInstance().changeSourceCountry(sourceCountry);
+        if (mSettings.getUpdateByReplace() != mUpdateByReplace.isSelected())
+            ZattooPlugin.getInstance().changeUpdate(mUpdateByReplace.isSelected() ? ZattooSettings.UPDATE_BY_REPLACE : ZattooSettings.UPDATE_BY_MERGE);
+        if (mSettings.getMergeAndReplace() != mMergeAndReplace.isSelected())
+            ZattooPlugin.getInstance().changeMerge(mMergeAndReplace.isSelected() ? ZattooSettings.MERGE_AND_REPLACE : ZattooSettings.MERGE_ONLY_NEW);
     }
 
     public Icon getIcon() {
@@ -182,6 +204,12 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(2);
         mUpdateCustomChannels = new JCheckBox(mLocalizer.msg("updateCustomChannels", "updateCustomChannels"), false);
+        mUpdateCustomChannels.addActionListener(e -> {
+            if (mUpdateCustomChannels.isSelected())
+                mUpdateBtn.setEnabled(true);
+            else
+                mUpdateBtn.setEnabled(false);
+        });
         builder.add(mUpdateCustomChannels, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
         // Update by replace
@@ -228,7 +256,42 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.nextRow(2);
         builder.add(new JLabel(mLocalizer.msg("sourcecountry", "Source Country:")), cc.xyw(4, builder.getRow(), 3));
         builder.add(mSourceCountry, cc.xy(8, builder.getRow()));
+
+        //  button bar
         builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
+        builder.appendRow(FormSpecs.PREF_ROWSPEC);
+        builder.setRow(builder.getRowCount());
+        // Update button
+        mUpdateBtn = new JButton(mLocalizer.msg("updateBtn", "Update"));
+        mUpdateBtn.setEnabled(false);
+        mUpdateBtn.addActionListener(e -> {
+            if (mCustomChannelProperties != null) {
+                if (mSaveBtn.isEnabled()) {
+                    String content = mEditor.getText();
+                    try {
+                        mCustomChannelProperties.load(content);
+                    } catch (PropertyException ex) {
+                        JFrame frame = new JFrame("Error");
+                        JOptionPane.showMessageDialog(frame,
+                                ex.getMessage());
+                        return;
+                    }
+                }
+                updateCustomChannels(mUpdateByReplace.isSelected(),
+                        mMergeAndReplace.isSelected(), mCustomChannelProperties, ((ZattooCountry)mSourceCountry.getSelectedItem()).getCode());
+                setEditor(mEditor, mCustomChannelProperties);
+                mUpdateBtn.setEnabled(false);
+                mUpdateCustomChannels.setSelected(false);
+            }
+        });
+
+        ButtonBarBuilder buttonBar = new ButtonBarBuilder();
+        buttonBar.addButton(new JButton[]{mUpdateBtn});
+        builder.add(buttonBar.getPanel(), cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
+
+        builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
+
+
         JPanel panel = builder.getPanel();
         Border border = new TitledBorder(mLocalizer.msg("createChannelsList", "createChannelsList"));
         panel.setBorder(border);
@@ -303,7 +366,9 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(2);
         String content = "";
+
         mEditor = new JTextArea();
+        mEditor.setRows(15);
         if (!setEditor(mEditor, mCustomChannelProperties)) {
             mEditor.setEnabled(false);
         }
@@ -314,6 +379,7 @@ public final class ZattooSettingsTab implements SettingsTab {
             im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
             im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
             im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
             mEditor.setInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, im);
         }
         Document mDocument = mEditor.getDocument();
@@ -347,6 +413,7 @@ public final class ZattooSettingsTab implements SettingsTab {
         JPanel panel = builder.getPanel();
         Border border = new TitledBorder(mLocalizer.msg("propertyFile", "Configuration file"));
         panel.setBorder(border);
+
         return panel;
     }
 
@@ -356,7 +423,12 @@ public final class ZattooSettingsTab implements SettingsTab {
         try {
             customChannelProperties.load(content);
             customChannelProperties.storeProperties();
+
+            jTextArea.setCaretPosition(0);
+            DefaultCaret caret = (DefaultCaret)jTextArea.getCaret();
+            caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
             jTextArea.setText(customChannelProperties.toString());
+
             return true;
         } catch (Exception ex) {
             JFrame frame = new JFrame("Error");
@@ -370,6 +442,48 @@ public final class ZattooSettingsTab implements SettingsTab {
         if (jTextArea == null || customChannelProperties == null) return false;
         String content = customChannelProperties.toString();
         jTextArea.setText(content);
+        jTextArea.setCaretPosition(0);
+
         return true;
     }
+
+    /**
+     * Update custom channels.
+     *
+     * @param replace         the replace
+     * @param mergeAndReplace the merge and replace
+     */
+    public boolean updateCustomChannels(boolean replace, boolean mergeAndReplace,
+                                        CustomChannelProperties customChannelProperties, String countryCode) {
+        Channel[] channels = ChannelList.getSubscribedChannels();
+        ZattooChannelProperties zattooChannelProperties = new ZattooChannelProperties(countryCode);
+
+        try {
+            if (customChannelProperties == null)
+                return false;
+            if (replace) {
+                customChannelProperties.clear(false);
+            }
+            if (replace || mergeAndReplace) {
+                for (Channel channel : channels) {
+                    String id = zattooChannelProperties.getProperty(channel);
+                    String zattooChannel = (id == null) ? "" : id;
+                    customChannelProperties.setChannel(channel, zattooChannel, false);
+                }
+            } else {
+                for (Channel channel : channels) {
+                    String value = customChannelProperties.getProperty(channel);
+                    if ( value == null || value.trim().isEmpty() ) {
+                        String id = zattooChannelProperties.getProperty(channel);
+                        String zattooChannel = (id == null) ? "" : id;
+                        customChannelProperties.setChannel(channel, zattooChannel, false);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            // will never happen
+        }
+        return true;
+    }
+
 }

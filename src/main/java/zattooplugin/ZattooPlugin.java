@@ -235,7 +235,7 @@ public final class ZattooPlugin extends Plugin {
                 }
 
                 public boolean accept(Program program) {
-                    return isProgramSupported(program);
+                    return isChannelSupported(program.getChannel());
                 }
             };
         }
@@ -352,40 +352,4 @@ public final class ZattooPlugin extends Plugin {
     }
 
 
-    /**
-     * Update custom channels.
-     *
-     * @param replace         the replace
-     * @param mergeAndReplace the merge and replace
-     */
-    public void updateCustomChannels(boolean replace, boolean mergeAndReplace) {
-        Channel[] channels = ChannelList.getSubscribedChannels();
-        try {
-            if (customChannelProperties == null)
-                customChannelProperties = new CustomChannelProperties();
-            if (replace) {
-                customChannelProperties.clear(false);
-            }
-            if (replace || mergeAndReplace) {
-                for (Channel channel : channels) {
-                    String id = getChannelId(channel);
-                    String zattooChannel = (id == null) ? "" : id;
-                    customChannelProperties.setChannel(channel, zattooChannel);
-                }
-            } else {
-                for (Channel channel : channels) {
-                    if (!customChannelProperties.containsKey(channel)) {
-                        String id = getChannelId(channel);
-                        String zattooChannel = (id == null) ? "" : id;
-                        customChannelProperties.setChannel(channel, zattooChannel);
-                    }
-                }
-            }
-            customChannelProperties.storeProperties();
-        } catch (IOException e) {
-            JFrame frame = new JFrame(mLocalizer.msg("error", "error"));
-            JOptionPane.showMessageDialog(frame,
-                    mLocalizer.msg("error.customFile", "error.customFile") + "\n" + e.getMessage());
-        }
-    }
 }

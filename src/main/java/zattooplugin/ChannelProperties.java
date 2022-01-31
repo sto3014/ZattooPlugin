@@ -20,10 +20,10 @@ public abstract class ChannelProperties {
     /**
      * Instantiates a new Channel properties.
      *
-     * @param country                 the country
+     * @param country the country
      */
     protected ChannelProperties(String country) {
-        isCustom = country.equals("custom");
+        isCustom = country.equals(CustomChannelProperties.COUNTRY_CODE);
         if (isCustom) {
             mFileName = CustomChannelProperties.PROPERTY_FILE_NAME;
         } else
@@ -62,6 +62,7 @@ public abstract class ChannelProperties {
      */
     protected abstract void checkProperties();
 
+
     /**
      * Gets property.
      *
@@ -73,6 +74,8 @@ public abstract class ChannelProperties {
             initializeProperties();
             String channelCountry = channel.getBaseCountry();
             String channelName = channel.getDefaultName();
+            String channelID = channel.getId();
+
             Enumeration keys = mProperties.propertyNames();
 
             while (true) {
@@ -94,7 +97,7 @@ public abstract class ChannelProperties {
 
                 for (int i$ = 0; i$ < len$; ++i$) {
                     String country = arr$[i$];
-                    if (channelCountry.equalsIgnoreCase(country) && channelName.matches(name)) {
+                    if (channelCountry.equalsIgnoreCase(country) && (channelName.matches(name) || channelID.matches(name))) {
                         String property = mProperties.getProperty(key);
                         if (isValidProperty(property)) {
                             return property;
@@ -112,12 +115,11 @@ public abstract class ChannelProperties {
             return null;
         }
     }
-
     /**
      * Is valid property boolean.
      *
      * @param var1 the var 1
      * @return the boolean
      */
-    protected abstract boolean isValidProperty(String var1);
+    protected abstract  boolean isValidProperty(String var1);
 }
