@@ -52,20 +52,44 @@ See also [Wiki TV-Browser](https://wiki.tvbrowser.org/index.php/Homeverzeichnis)
 ## Usage
 
 ---
+### Get prepared
 
-### Connect to Zattoo
+If you have a Zattoo account for Germany you are all set.  
+If you have a Zattoo account for Switzerland or Austria, just go to the Zattoo plugin settings and change the `Country:`
+combo box to your country.
+
+
+### Switch to Zattoo
 
 With the right mouse button click on a program. The popup dialog shows a Zattoo menu:
 
 * For programs which are currently running you see `Open in Zattoo now`  
   <img src="./images/OpenInZattoo.png" width="400"/>  
   This menu opens a new page in your web-browser and displays the channel in Zattoo
-* For programs which are not started yet you see `Open in Zattoo on start`  
+* For programs which are not yet started, you see `Open in Zattoo on start`  
   <img src="./images/OpenInZatooOnStart.png" width="400"/>  
   When the program starts, a new page will be opened in your web-browser and displays the channel in Zattoo. Remarks:
   This information will not be stored when TV-Browser is closed.
 
-If you don't get the expected Zattoo menu, you must use a different channel list.
+If you don't get the expected Zattoo menu, the selected channel is not available in Zattoo of your country, or the
+channel is just not configured to know the Zattoo channel 
+In latter case, you can define your own channel list.
+
+### Predefined channel lists
+
+The existing country channel list for Germany, Switzerland and Austria should cover all channel information for 
+your country.
+
+|Country     | No. of Zattoo channels    | Zattoo Website     |  No. of linked TVB channels |
+|------------|--------------------|-----|----|
+|Germany     |    141 |    [Zattoo Germany](https://zattoo.com/de/sender)  | 66|
+|Switzerland     |  282   |     [Zattoo Switzerland](https://zattoo.com/ch/sender) |94|
+|Austria     |   98  |    [Zattoo Austria](https://zattoo.com/at/sender)|59|
+
+If you want to subscribe all linked TVB channels you need 
+
+### Define your own channel list
+
 See [Plugin Settings](#plugin-settings) for details.
 
 ### Filters
