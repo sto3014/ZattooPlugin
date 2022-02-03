@@ -17,6 +17,7 @@ public class ZattooSettings {
     private static final String KEY_MERGE = "MERGE";
     public static final int MERGE_AND_REPLACE = 0;
     public static final int MERGE_ONLY_NEW = 1;
+    public static final String KEY_USE_ONLY_SUBSCRIBED_CHANNELS="USE_ONLY_SUBSCRIBED_CHANNELS";
 
     private final Properties mProperties;
 
@@ -39,6 +40,8 @@ public class ZattooSettings {
 
         if (mProperties.getProperty(KEY_MERGE) == null)
             mProperties.setProperty(KEY_MERGE, Integer.toString(MERGE_ONLY_NEW));
+
+
 
         deleteOldProperties();
     }
@@ -167,5 +170,15 @@ public class ZattooSettings {
     public boolean getMergeOnlyNew() {
         return getMerge() == MERGE_ONLY_NEW;
     }
+
+    public boolean getUseOnlySubscribedChannels() {
+        return mProperties.getProperty(KEY_USE_ONLY_SUBSCRIBED_CHANNELS, "true").equalsIgnoreCase("true");
+    }
+
+    public void setUseOnlySubscribedChannels( boolean useOnlySubscribedChannels) {
+         mProperties.setProperty(KEY_USE_ONLY_SUBSCRIBED_CHANNELS, useOnlySubscribedChannels ? "true" : "false");
+    }
+
+
 
 }

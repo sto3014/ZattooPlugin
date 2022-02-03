@@ -101,6 +101,10 @@ public final class ZattooPlugin extends Plugin {
         mSettings.setMerge(merge);
     }
 
+    public void changeUseOnlySubscribedChannels( boolean useOnlySubscribedChannels){
+        mSettings.setUseOnlySubscribedChannels(useOnlySubscribedChannels);
+    }
+
     public PluginInfo getInfo() {
         return new PluginInfo(ZattooPlugin.class,
                 mLocalizer.msg("pluginName", "Zattoo"),

@@ -52,12 +52,12 @@ See also [Wiki TV-Browser](https://wiki.tvbrowser.org/index.php/Homeverzeichnis)
 ## Usage
 
 ---
+
 ### Get prepared
 
 If you have a Zattoo account for Germany you are all set.  
 If you have a Zattoo account for Switzerland or Austria, just go to the Zattoo plugin settings and change the `Country:`
 combo box to your country.
-
 
 ### Switch to Zattoo
 
@@ -72,23 +72,45 @@ With the right mouse button click on a program. The popup dialog shows a Zattoo 
   This information will not be stored when TV-Browser is closed.
 
 If you don't get the expected Zattoo menu, the selected channel is not available in Zattoo of your country, or the
-channel is just not configured to know the Zattoo channel 
-In latter case, you can define your own channel list.
+channel is just not configured to know the Zattoo channel In latter case, you can define your own channel list.
 
 ### Predefined channel lists
 
-The existing country channel list for Germany, Switzerland and Austria should cover all channel information for 
-your country.
+The existing country channel list for Germany, Switzerland and Austria should cover all channel information for your
+country.
 
-|Country     | No. of Zattoo channels    | Zattoo Website     |  No. of linked TVB channels |
-|------------|--------------------|-----|----|
-|Germany     |    141 |    [Zattoo Germany](https://zattoo.com/de/sender)  | 66|
-|Switzerland     |  282   |     [Zattoo Switzerland](https://zattoo.com/ch/sender) |94|
-|Austria     |   98  |    [Zattoo Austria](https://zattoo.com/at/sender)|59|
+|Country     | No. of Zattoo channels    | Zattoo Website     |  No. of linked TVB channels<sup>1</sup> |
+|------------|:---------------------------:|--------------------|:-----------------------------:|
+|Germany     | 141 | [Zattoo Germany](https://zattoo.com/de/sender)  | 66<sup>3</sup>|
+|Switzerland | 282 | [Zattoo Switzerland](https://zattoo.com/ch/sender) |94<sup>2</sup>|
+|Austria     | 98  | [Zattoo Austria](https://zattoo.com/at/sender)|59<sup>3</sup>|
 
-If you want to subscribe all linked TVB channels you need 
+<sup>1</sup> Data plugins EPGfree-data and [EPG-Plus](https://epg-plus.com) were used.  
+<sup>2</sup> EPG-Plus provides 35 channels. So it is worth a look.  
+<sup>3</sup> EPG-Plus provides only 4 channels
 
 ### Define your own channel list
+
+There are three use cases for using your own channel list:
+
+#### Use case 1: Zattoo menu is not shown
+
+You subscribed a channel in TV-Browser but no Zattoo menu appears for this channel. The basic reason for this is quite
+simple: The chosen country channel list does not include the Zattoo channel name. And why is it?: Zattoo added the
+channel recently. What to do?
+* Go to your plugin settings
+* Create your own channel list:
+    * Check the `Update` box
+    * Choose a `Source` country
+    * Click `Update` button
+* In the editor    
+
+
+
+
+#### Use case 2: Zattoo menu is shown, but the channel does not exist in Zattoo
+
+#### Use case 3: Subscribing all channels of a country channel list.
 
 See [Plugin Settings](#plugin-settings) for details.
 
@@ -112,8 +134,8 @@ default country list is `Germany`. If your Zattoo account is registered in Switz
 appropriated list.  
 <img src="./images/CountrySettings.png" width="500"/>
 
-But even if one country list fits your country, not all of your subscribed channels may show up the Zattoo
-menu. So, if your country is not listed at all, or if not all of your channels are valid for Zattoo, you must use
+But even if one country list fits your country, not all of your subscribed channels may show up the Zattoo menu. So, if
+your country is not listed at all, or if not all of your channels are valid for Zattoo, you must use
 the `Own channel list`. This list is empty by default, and you must set it up. To do so, please follow the instructions
 in the `Create your own channel list` and `Adopt your own channel list` area in the TV-Browser settings panel.
 

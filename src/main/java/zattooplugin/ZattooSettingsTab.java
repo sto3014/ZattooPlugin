@@ -49,6 +49,8 @@ public final class ZattooSettingsTab implements SettingsTab {
 
     private JPanel mFilePanel;
 
+    private JCheckBox mUseOnlySubscribedChannels;
+
 
     /**
      * Instantiates a new Zattoo settings tab.
@@ -132,6 +134,8 @@ public final class ZattooSettingsTab implements SettingsTab {
             ZattooPlugin.getInstance().changeUpdate(mUpdateByReplace.isSelected() ? ZattooSettings.UPDATE_BY_REPLACE : ZattooSettings.UPDATE_BY_MERGE);
         if (mSettings.getMergeAndReplace() != mMergeAndReplace.isSelected())
             ZattooPlugin.getInstance().changeMerge(mMergeAndReplace.isSelected() ? ZattooSettings.MERGE_AND_REPLACE : ZattooSettings.MERGE_ONLY_NEW);
+        if (mSettings.getUseOnlySubscribedChannels() != mUseOnlySubscribedChannels.isSelected())
+            ZattooPlugin.getInstance().changeUseOnlySubscribedChannels(mUseOnlySubscribedChannels.isSelected());
     }
 
     public Icon getIcon() {
@@ -257,6 +261,14 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.add(new JLabel(mLocalizer.msg("sourcecountry", "Source Country:")), cc.xyw(4, builder.getRow(), 3));
         builder.add(mSourceCountry, cc.xy(8, builder.getRow()));
 
+        // useOnlySubscribedChannels
+        mUseOnlySubscribedChannels = new JCheckBox(mLocalizer.msg("useOnlySubscribedChannels", "useOnlySubscribedChannels"));
+        mUseOnlySubscribedChannels.setSelected(mSettings.getUseOnlySubscribedChannels());
+        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
+        builder.appendRow(FormSpecs.PREF_ROWSPEC);
+        builder.nextRow(2);
+        builder.add(mUseOnlySubscribedChannels, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
+
         //  button bar
         builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
@@ -278,7 +290,7 @@ public final class ZattooSettingsTab implements SettingsTab {
                     }
                 }
                 updateCustomChannels(mUpdateByReplace.isSelected(),
-                        mMergeAndReplace.isSelected(), mCustomChannelProperties, ((ZattooCountry)mSourceCountry.getSelectedItem()).getCode());
+                        mMergeAndReplace.isSelected(), mUseOnlySubscribedChannels.isSelected(), mCustomChannelProperties, ((ZattooCountry) mSourceCountry.getSelectedItem()).getCode());
                 setEditor(mEditor, mCustomChannelProperties);
                 mUpdateBtn.setEnabled(false);
                 mUpdateCustomChannels.setSelected(false);
@@ -425,7 +437,7 @@ public final class ZattooSettingsTab implements SettingsTab {
             customChannelProperties.storeProperties();
 
             jTextArea.setCaretPosition(0);
-            DefaultCaret caret = (DefaultCaret)jTextArea.getCaret();
+            DefaultCaret caret = (DefaultCaret) jTextArea.getCaret();
             caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
             jTextArea.setText(customChannelProperties.toString());
 
@@ -453,9 +465,14 @@ public final class ZattooSettingsTab implements SettingsTab {
      * @param replace         the replace
      * @param mergeAndReplace the merge and replace
      */
-    public boolean updateCustomChannels(boolean replace, boolean mergeAndReplace,
+    public boolean updateCustomChannels(boolean replace, boolean mergeAndReplace, boolean useOnlySubscribedChannels,
                                         CustomChannelProperties customChannelProperties, String countryCode) {
-        Channel[] channels = ChannelList.getSubscribedChannels();
+        Channel[] channels;
+        if (useOnlySubscribedChannels)
+            channels = ChannelList.getSubscribedChannels();
+        else
+            channels = ChannelList.getAvailableChannels();
+
         ZattooChannelProperties zattooChannelProperties = new ZattooChannelProperties(countryCode);
 
         try {
@@ -465,18 +482,33 @@ public final class ZattooSettingsTab implements SettingsTab {
                 customChannelProperties.clear(false);
             }
             if (replace || mergeAndReplace) {
+
                 for (Channel channel : channels) {
                     String id = zattooChannelProperties.getProperty(channel);
-                    String zattooChannel = (id == null) ? "" : id;
-                    customChannelProperties.setChannel(channel, zattooChannel, false);
+                    if (!useOnlySubscribedChannels) {
+                        if (id != null)
+                            customChannelProperties.setChannel(channel, id, false);
+                    } else{
+                        String zattooChannel = (id == null) ? "" : id;
+                        customChannelProperties.setChannel(channel, zattooChannel, false);
+                    }
                 }
             } else {
                 for (Channel channel : channels) {
-                    String value = customChannelProperties.getProperty(channel);
-                    if ( value == null || value.trim().isEmpty() ) {
-                        String id = zattooChannelProperties.getProperty(channel);
-                        String zattooChannel = (id == null) ? "" : id;
-                        customChannelProperties.setChannel(channel, zattooChannel, false);
+                    String id = zattooChannelProperties.getProperty(channel);
+                    if (!useOnlySubscribedChannels) {
+                        if (id != null) {
+                            String value = customChannelProperties.getProperty(channel);
+                            if (value == null || value.trim().isEmpty()) {
+                                customChannelProperties.setChannel(channel, id, false);
+                            }
+                        }
+                    } else {
+                        String value = customChannelProperties.getProperty(channel);
+                        if (value == null || value.trim().isEmpty()) {
+                            String zattooChannel = (id == null) ? "" : id;
+                            customChannelProperties.setChannel(channel, zattooChannel, false);
+                        }
                     }
                 }
             }
