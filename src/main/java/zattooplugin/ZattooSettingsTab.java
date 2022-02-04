@@ -2,7 +2,9 @@ package zattooplugin;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.*;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
 import devplugin.Channel;
 import devplugin.SettingsTab;
 import tvbrowser.core.ChannelList;
@@ -15,14 +17,13 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.Document;
+import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.net.*;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
 /**
  * The type Zattoo settings.
@@ -42,6 +43,8 @@ public final class ZattooSettingsTab implements SettingsTab {
     private JButton mSaveBtn;
     private JButton mResetBtn;
     private JButton mUpdateBtn;
+    private JButton mVerifyBtn;
+
 
     private JRadioButton mUpdateByReplace;
     private JRadioButton mMergeAndReplace;
@@ -294,6 +297,10 @@ public final class ZattooSettingsTab implements SettingsTab {
                 setEditor(mEditor, mCustomChannelProperties);
                 mUpdateBtn.setEnabled(false);
                 mUpdateCustomChannels.setSelected(false);
+                if (mCustomChannelProperties.getProperties().size() > 0)
+                    mVerifyBtn.setEnabled(true);
+                else
+                    mVerifyBtn.setEnabled(false);
             }
         });
 
@@ -347,8 +354,11 @@ public final class ZattooSettingsTab implements SettingsTab {
                 if (saveEditor(mEditor, mCustomChannelProperties)) {
                     mSaveBtn.setEnabled(false);
                     mResetBtn.setEnabled(false);
+                    if (mCustomChannelProperties.getProperties().size() > 0)
+                        mVerifyBtn.setEnabled(true);
+                    else
+                        mVerifyBtn.setEnabled(false);
                 }
-
             }
         });
         // Reset button
@@ -359,11 +369,26 @@ public final class ZattooSettingsTab implements SettingsTab {
                 mEditor.setText(mCustomChannelProperties.toString());
                 mResetBtn.setEnabled(false);
                 mSaveBtn.setEnabled(false);
+                if (mCustomChannelProperties.getProperties().size() > 0)
+                    mVerifyBtn.setEnabled(true);
+                else
+                    mVerifyBtn.setEnabled(false);
             }
         });
+        // Verify button
+        mVerifyBtn = new JButton(mLocalizer.msg("verifyBtn", "Verify"));
+        if (mCustomChannelProperties != null && mCustomChannelProperties.getProperties().size() > 0)
+            mVerifyBtn.setEnabled(true);
+        else
+            mVerifyBtn.setEnabled(false);
+
+        mVerifyBtn.addActionListener(e -> {
+            verifyZattooNames(mEditor, ((ZattooCountry) mCountry.getSelectedItem()).getCode());
+        });
+
 
         ButtonBarBuilder buttonBar = new ButtonBarBuilder();
-        buttonBar.addButton(new JButton[]{mSaveBtn, mResetBtn});
+        buttonBar.addButton(new JButton[]{mSaveBtn, mResetBtn, mVerifyBtn});
         builder.add(buttonBar.getPanel(), cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
@@ -401,18 +426,30 @@ public final class ZattooSettingsTab implements SettingsTab {
             public void insertUpdate(DocumentEvent e) {
                 mSaveBtn.setEnabled(true);
                 mResetBtn.setEnabled(true);
+                if (mEditor.getText().isEmpty())
+                    mVerifyBtn.setEnabled(false);
+                else
+                    mVerifyBtn.setEnabled(true);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 mSaveBtn.setEnabled(true);
                 mResetBtn.setEnabled(true);
+                if (mEditor.getText().isEmpty())
+                    mVerifyBtn.setEnabled(false);
+                else
+                    mVerifyBtn.setEnabled(true);
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                 mSaveBtn.setEnabled(true);
                 mResetBtn.setEnabled(true);
+                if (mEditor.getText().isEmpty())
+                    mVerifyBtn.setEnabled(false);
+                else
+                    mVerifyBtn.setEnabled(true);
             }
         });
         builder.add(new JScrollPane(mEditor), cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
@@ -488,7 +525,7 @@ public final class ZattooSettingsTab implements SettingsTab {
                     if (!useOnlySubscribedChannels) {
                         if (id != null)
                             customChannelProperties.setChannel(channel, id, false);
-                    } else{
+                    } else {
                         String zattooChannel = (id == null) ? "" : id;
                         customChannelProperties.setChannel(channel, zattooChannel, false);
                     }
@@ -518,4 +555,98 @@ public final class ZattooSettingsTab implements SettingsTab {
         return true;
     }
 
+    private void verifyZattooNames(JTextArea textArea, String countryCode) {
+        try {
+            if (countryCode.equals(CustomChannelProperties.COUNTRY_CODE))
+                return;
+            if (textArea.getText().isEmpty())
+                return;
+            if (!pingHost("zattoo.com", 443, 10000))
+                return;
+
+            textArea.getHighlighter().removeAllHighlights();
+            StringTokenizer stringTokenizer = new StringTokenizer(textArea.getText(), System.lineSeparator());
+            int lineNo = -1;
+            String zattooChannels = "";
+            // URL
+            URLConnection connection = new URL("https://zattoo.com/" + countryCode + "/sender").openConnection();
+            Scanner scanner = new Scanner(connection.getInputStream());
+            scanner.useDelimiter("\\Z");
+            zattooChannels = scanner.next();
+            scanner.close();
+
+//            WebClient webClient = new WebClient();
+//            webClient.getOptions().setThrowExceptionOnScriptError(false);
+//            HtmlPage myPage = null;
+//            String msg="";
+//            try {
+//                myPage = webClient.getPage(new URL("https://zattoo.com/live/xxx"));
+//            } catch (Exception e) {
+//                msg = e.getMessage();
+//            }
+//
+//            // convert page to generated HTML and convert to document
+//            org.jsoup.nodes.Document doc;
+//            doc = Jsoup.parse(myPage.asXml());
+//            // File
+////            InputStream inputStream = getClass().getResourceAsStream("zattoo_sender_" + countryCode + ".html");
+////            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+////            StringBuilder stringBuilder = new StringBuilder();
+////            int c = 0;
+////            while ((c = bufferedReader.read()) != -1) {
+////                stringBuilder.append((char) c);
+////            }
+////            zattooChannels = stringBuilder.toString();
+
+            int firstLineNo = -1;
+            while (stringTokenizer.hasMoreTokens()) {
+                lineNo++;
+                String line = stringTokenizer.nextToken();
+                StringTokenizer keyValuePair = new StringTokenizer(line, "=");
+                if (keyValuePair.countTokens() == 2) {
+                    keyValuePair.nextToken();
+                    String zattooChannel = keyValuePair.nextToken();
+                    if (!zattooChannels.contains("\"/live/" + zattooChannel + "\"")) {
+                        if (firstLineNo < 0) firstLineNo = lineNo;
+                        int startIndex = textArea.getLineEndOffset(lineNo) - (zattooChannel.length() + 1);
+                        int endIndex = textArea.getLineEndOffset(lineNo);
+                        Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+                        textArea.getHighlighter().addHighlight(startIndex, endIndex, painter);
+                    }
+                }
+            }
+            if (firstLineNo >= 0) {
+                textArea.setCaretPosition(textArea.getLineStartOffset(firstLineNo));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public static boolean pingHost(String host, int port, int timeout) {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(host, port), timeout);
+            return true;
+        } catch (IOException e) {
+            return false; // Either timeout or unreachable or failed DNS lookup.
+        }
+    }
+
+    public static boolean pingURL(String url, int timeout) {
+        //url = url.replaceFirst("^https", "http"); // Otherwise an exception may be thrown on invalid SSL certificates.
+
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setConnectTimeout(timeout);
+            connection.setReadTimeout(timeout);
+            connection.setRequestMethod("HEAD");
+            int responseCode = connection.getResponseCode();
+            return (200 <= responseCode && responseCode <= 399);
+        } catch (IOException exception) {
+            return false;
+        }
+    }
 }
