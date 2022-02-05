@@ -12,7 +12,7 @@ The current plugin is based on their work.
 * Filter by supported channels
 * New in 1.5: Add country channel list for Austria
 * New in 1.5: Add possibility to create your own channel list
-* New in 1.5: Subscribe all Zattoo channels in TV-Browser
+* New in 1.5: Generate import file for all Zattoo channels
 * Update in 1.5: Channel lists for Germany and Switzerland were updated.
 
 ## Requirements
