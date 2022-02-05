@@ -377,7 +377,7 @@ public final class ZattooSettingsTab implements SettingsTab {
             mVerifyBtn.setEnabled(false);
 
         mVerifyBtn.addActionListener(e -> {
-            verifyZattooNames(mEditor, ((ZattooCountry) mCountry.getSelectedItem()).getCode());
+            verifyZattooNames(mEditor, ((ZattooCountry) mSourceCountry.getSelectedItem()).getCode());
         });
 
 
@@ -474,7 +474,7 @@ public final class ZattooSettingsTab implements SettingsTab {
 
             return true;
         } catch (Exception ex) {
-            JFrame frame = new JFrame("Error");
+            JFrame frame = new JFrame(mLocalizer.msg("error", "error"));
             JOptionPane.showMessageDialog(frame,
                     ex.getMessage());
             return false;
@@ -555,8 +555,13 @@ public final class ZattooSettingsTab implements SettingsTab {
                 return;
             if (textArea.getText().isEmpty())
                 return;
-            if (!pingHost("zattoo.com", 443, 10000))
+            if (!pingHost("zattoo.com", 443, 10000)) {
+                JFrame frame = new JFrame(mLocalizer.msg("error", "error"));
+                JOptionPane.showMessageDialog(frame,
+                        mLocalizer.msg("error.zattoopage", "error.zattoopage"));
                 return;
+
+            }
 
             textArea.getHighlighter().removeAllHighlights();
             StringTokenizer stringTokenizer = new StringTokenizer(textArea.getText(), System.lineSeparator());
@@ -568,29 +573,6 @@ public final class ZattooSettingsTab implements SettingsTab {
             scanner.useDelimiter("\\Z");
             zattooChannels = scanner.next();
             scanner.close();
-
-//            WebClient webClient = new WebClient();
-//            webClient.getOptions().setThrowExceptionOnScriptError(false);
-//            HtmlPage myPage = null;
-//            String msg="";
-//            try {
-//                myPage = webClient.getPage(new URL("https://zattoo.com/live/xxx"));
-//            } catch (Exception e) {
-//                msg = e.getMessage();
-//            }
-//
-//            // convert page to generated HTML and convert to document
-//            org.jsoup.nodes.Document doc;
-//            doc = Jsoup.parse(myPage.asXml());
-//            // File
-////            InputStream inputStream = getClass().getResourceAsStream("zattoo_sender_" + countryCode + ".html");
-////            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-////            StringBuilder stringBuilder = new StringBuilder();
-////            int c = 0;
-////            while ((c = bufferedReader.read()) != -1) {
-////                stringBuilder.append((char) c);
-////            }
-////            zattooChannels = stringBuilder.toString();
 
             int firstLineNo = -1;
             while (stringTokenizer.hasMoreTokens()) {
@@ -630,8 +612,6 @@ public final class ZattooSettingsTab implements SettingsTab {
     }
 
     public static boolean pingURL(String url, int timeout) {
-        //url = url.replaceFirst("^https", "http"); // Otherwise an exception may be thrown on invalid SSL certificates.
-
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setConnectTimeout(timeout);

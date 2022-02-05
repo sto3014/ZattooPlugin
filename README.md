@@ -245,10 +245,12 @@ The `Verify Zattoo names` button looks if given Zattoo channel names exist on th
 * [Switzerland channel page](https://zattoo.com/ch/sender)
 * [Austria channel page](https://zattoo.com/at/sender)
 
+Which channel page is used depends on the selected `Source` channel list.  
 If the name is not found it will be highlighted in red. But this is not a guarantee that the channel name is valid. On
 the Austrian page there are two channels which are misspelled. Therefore, the channels `kabel_eins_doku_at`
-and `mtvgermany` are highlighted in red, even they are correct.  
+and `mtvgermany` are highlighted in red, even they are correct.
 I could not verify the channels for Germany and Switzerland, because I have only a Zattoo subscription for Austria.
+
 
 The `Save` button stores your changes in your local settings. If you press `OK` or `Apply` in the main Window, your changes
 are saved as well. The `Reset` button can only undo changes which where not saved before.
