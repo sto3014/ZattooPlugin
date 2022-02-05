@@ -181,6 +181,9 @@ For detailed configuration please see [Usage](#usage) first.
   The `Country` drop-down list contains three predefined channel configurations for `Germany`, `Switzerland`
   and `Austria`
   . The `Own channel list` is empty by default and can be used for customization.
+  
+If you change your country also the source country (see next chapter) will be set to the same value. This is
+what you normally need if you start creating your own channel list.
 
 ### Create your own channel list
 
@@ -188,43 +191,22 @@ For detailed configuration please see [Usage](#usage) first.
   If checked, your own channel list will be updated when pressing `Apply updates`. If you press `OK`, `Cancel`
   or `Apply` in the main window, no update will happen.  
   After the update, `Update own channel list (only once)` will be un-checked.
-
-The merge/replace process depends on if `Add only subscribed channels` is checked or not:
-
-&#9745; `Add only subscribed channels`
-
-* `Replace`  
-  All existing entries in your channel list will be removed first.  
-  Then all your subscribed channels will be added to your channel list. If a Zattoo channel name is found in the
-  selected `Source` list it will be added. Otherwise, the Zattoo channel name will be empty.
-* `Merge`  
-  Existing entries and entries from the selected `Source` list will be merged.
-    * `Add and replace`  
-      All your subscribed channels will be added to your channel list. This happens even when there was no Zattoo
-      channel name found in selected `Source` list. I.e., if an existing entry has a Zattoo channel name configured it
-      might be removed.   
-      Existing entries which are not part of your subscribed channels are not changed.
-    * `Add only new`  
-      All your subscribed channels will be added to your channel list. They will overwrite existing entries only if the
-      existing entries do not have a Zattoo channel name configured. Zattoo channel names found in selected `Source`
-      list will be added.  
-      Existing entries which are not part of your subscribed channels are not changed.
-
-&#9744; `Add only subscribed channels`
-
-* `Replace`  
+    * `Replace`  
   All existing entries in your channel list will be removed first.  
   Then all channels from the selected `Source` list will be added to your channel list.
-* `Merge`  
-  Existing entries and entries from the selected `Source` list will be merged.
-    * `Add and replace`  
+    * `Merge`  
+      Existing entries and entries from the selected `Source` list will be merged.
+        * `Add and replace`  
       All channels from the selected `Source` list will be added to your channel list. I.e., existing entry which have
       already a Zattoo channel name configured will be overwritten with new Zattoo channel names.   
       Existing entries which are not part of the selected `Source` list are not changed.
-    * `Add only new`  
+        * `Add only new`  
       All channels from the selected `Source` list will be added to your channel list. They will overwrite existing
       entries only if the existing entries do not have a Zattoo channel name configured. Existing entries which are not
       part of your subscribed channels are not changed.
+
+If you check `Add only subscribed channels` your channel list will only display channels which were already
+subscribed. This is helpful if you have only a few channels subscribed, and you want to keep your list clearly arranged.
 
 The `Apply update` button just updates the list below. If you press `Cancel` in the main window the changes are lost.
 
