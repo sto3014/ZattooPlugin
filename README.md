@@ -93,6 +93,8 @@ country.
 
 ### Define your own channel list
 
+Please see also [Plugin settings](#plugin-settings) for detailed information.
+
 There are 3 use cases for an own channel list:
 
 #### Use case 1: Zattoo menu is not shown
@@ -122,7 +124,7 @@ correct configuration entry must look like this: `de,arte=DE_arte`.
 You use the correct country channel list, and you get the Zattoo menu, but Zattoo does not find the desired channel.
 This means, that the configuration in the channel list is wrong. For predefined lists this should not happen. But maybe
 Zattoo recently renames a channel without making a redirect. Whatever, if it happens it is up to you to follow the steps
-in [Use case 1: Zattoo menu is not shown](#use-case-1:-zattoo-menu-is-not-shown) and correct the Zattoo channel name.
+in the previous use case and correct the Zattoo channel name.
 
 #### Use case 3: Subscribing all channels of a country channel list.
 
