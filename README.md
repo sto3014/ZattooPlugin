@@ -110,7 +110,7 @@ channel recently. What to do?
     * Choose a `Source` country
     * Press `Apply Update` button
 
-By applying the update, for every subscribed channel a configuration is added in the editor below. On the left side of
+By applying the update, for every source country channel a configuration is added in the editor below. On the left side of
 the equation sign you see the country and the name of the TV-Browser channel (Example: de,arte). Please do not change
 it. On the right side you see the name of the Zattoo channel.   
 The channel for which the Zattoo menu does not appear will be listed, but the right side is empty. To get the name for
@@ -128,16 +128,14 @@ in the previous use case and correct the Zattoo channel name.
 
 #### Use case 3: Subscribing all channels of a country channel list.
 
-A side effect of defining your own channel list is, that an import-file for TV-Browser channels are created as well. In
-the first two use cases this was not relevant, because the created list should only include entries for already
-subscribed channels. But maybe you want to subscribe all German channels for which a Zattoo configuration is available.
-Here is what you have to do:
+A side effect of defining your own channel list is, that an import-file for TV-Browser channels is created as well. 
+So even if you do not have to change Zattoo channel names you can use this functionality to subscribe all channels
+for your country. Here is what you have to do:
 
 * Go to your plugin settings
 * Create your own channel list:
     * Check the `Update own channel list` box
     * Choose a `Source` country
-    * Un-check `Add only subscribed channels`
     * Press `Apply Update` button
 
 Remarks: For this use case it is not necessary to set the `Country` to `Own channel list`.

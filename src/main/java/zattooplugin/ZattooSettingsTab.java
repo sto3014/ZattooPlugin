@@ -17,9 +17,16 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.text.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
 import java.io.IOException;
 import java.net.*;
 import java.util.Scanner;
@@ -180,6 +187,22 @@ public final class ZattooSettingsTab implements SettingsTab {
 
         mCountry = new JComboBox(countries);
         mCountry.setSelectedItem(new ZattooCountry(mSettings.getCountry(), ""));
+        mCountry.addVetoableChangeListener(new VetoableChangeListener() {
+            @Override
+            public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
+                if ( ! ((ZattooCountry) mCountry.getSelectedItem()).getCode().equals(CustomChannelProperties.COUNTRY_CODE)){
+                    mSourceCountry.setSelectedItem( new ZattooCountry(mSettings.getCountry(), ""));
+                }
+            }
+        });
+        mCountry.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if ( ! ((ZattooCountry) mCountry.getSelectedItem()).getCode().equals(CustomChannelProperties.COUNTRY_CODE)){
+                    mSourceCountry.setSelectedItem( mCountry.getSelectedItem());
+                }
+            }
+        });
         builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.setRow(builder.getRowCount());
