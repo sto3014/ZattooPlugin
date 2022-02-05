@@ -137,7 +137,7 @@ Here is what you have to do:
 * Create your own channel list:
     * Check the `Update own channel list` box
     * Choose a `Source` country
-    * Un-check `Update only channels which are subscribed`
+    * Un-check `Add only subscribed channels`
     * Press `Apply Update` button
 
 Remarks: For this use case it is not necessary to set the `Country` to `Own channel list`.
@@ -154,8 +154,10 @@ By applying the update all channels from your chosen country list are written in
 Now:
 
 * Go to `General settings` `Channels`
+* Set `Countries` to `All countries` and `Plugins` to `All plugins`
 * Press `Export/import channels`
 * Import java.zattooplugin.CustomChannelProperties.txt from your local settings directory listed above.
+
 
 ### Filters
 
@@ -189,9 +191,9 @@ For detailed configuration please see [Usage](#usage) first.
   or `Apply` in the main window, no update will happen.  
   After the update, `Update own channel list (only once)` will be un-checked.
 
-The merge/replace process depends on if `Update only channels which are subscribed` is checked or not:
+The merge/replace process depends on if `Add only subscribed channels` is checked or not:
 
-&#9745; `Update only channels which are subscribed`
+&#9745; `Add only subscribed channels`
 
 * `Replace`  
   All existing entries in your channel list will be removed first.  
@@ -210,7 +212,7 @@ The merge/replace process depends on if `Update only channels which are subscrib
       list will be added.  
       Existing entries which are not part of your subscribed channels are not changed.
 
-&#9744; `Update only channels which are subscribed`
+&#9744; `Add only subscribed channels`
 
 * `Replace`  
   All existing entries in your channel list will be removed first.  

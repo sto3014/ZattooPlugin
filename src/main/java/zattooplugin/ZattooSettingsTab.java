@@ -112,9 +112,9 @@ public final class ZattooSettingsTab implements SettingsTab {
     public void saveSettings() {
         if (mSaveBtn.isEnabled()) {
             if (saveEditor(mEditor, mCustomChannelProperties)) {
-                JFrame frame = new JFrame("Info");
-                JOptionPane.showMessageDialog(frame,
-                        mLocalizer.msg("saveOnExit", "saveOnExit"));
+//                JFrame frame = new JFrame("Info");
+//                JOptionPane.showMessageDialog(frame,
+//                        mLocalizer.msg("saveOnExit", "saveOnExit"));
                 mSaveBtn.setEnabled(false);
             }
         }

@@ -227,7 +227,7 @@ public class CustomChannelProperties {
         return channel.getBaseCountry() + "," + channelName;
     }
 
-    public String getProperty(Channel channel){
+    public String getProperty(Channel channel) {
         return properties.getProperty(getKey(channel));
     }
 
@@ -274,7 +274,7 @@ public class CustomChannelProperties {
 
         for (Channel channel : sortedList) {
             String key = getKey(channel);
-            if (properties.getProperty(key) != null) {
+            if (properties.getProperty(key) != null && !properties.getProperty(key).isEmpty()) {
                 String serviceID = channel.getDataServiceId();
                 int idx = serviceID.indexOf(".");
                 if (idx > 0)
@@ -320,7 +320,7 @@ public class CustomChannelProperties {
             StringTokenizer keyValuePair = new StringTokenizer(line, "=");
             if (keyValuePair.countTokens() == 1) {
                 key = keyValuePair.nextToken().trim();
-                value="";
+                value = "";
             } else {
                 key = keyValuePair.nextToken().trim();
                 value = keyValuePair.nextToken().trim();
