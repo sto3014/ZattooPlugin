@@ -12,6 +12,7 @@ The current plugin is based on their work.
 * Filter by supported channels
 * New in 1.5: Add country channel list for Austria
 * New in 1.5: Add possibility to create your own channel list
+* New in 1.5: Subscribe all Zattoo channels in TV-Browser
 * Update in 1.5: Channel lists for Germany and Switzerland were updated.
 
 ## Requirements
@@ -57,8 +58,8 @@ See also [Wiki TV-Browser](https://wiki.tvbrowser.org/index.php/Homeverzeichnis)
 ### Get prepared
 
 If you have a Zattoo account for Germany you are all set.  
-If you have a Zattoo account for Switzerland or Austria, just go to the Zattoo plugin settings and change the `Country:`
-combo box to your country.
+If you have a Zattoo account for Switzerland or Austria, just go to the Zattoo plugin settings and change the `Country`
+drop-box list to your country.
 
 ### Switch to Zattoo
 
@@ -70,10 +71,10 @@ With the right mouse button click on a program. The popup dialog shows a Zattoo 
 * For programs which are not yet started, you see `Open in Zattoo on start`  
   <img src="./images/OpenInZatooOnStart.png" width="400"/>  
   When the program starts, a new page will be opened in your web-browser and displays the channel in Zattoo. Remarks:
-  This information will not be stored when TV-Browser is closed.
+  The `Open in Zattoo on start` information will not be stored when TV-Browser is closed.
 
-If you don't get the expected Zattoo menu, the selected channel is not available in Zattoo of your country, or the
-channel is just not configured to know the Zattoo channel In latter case, you can define your own channel list.
+If you don't get the expected Zattoo menu, the selected channel is not available in Zattoo for your country, or the
+channel is just not configured to know the Zattoo channel. In latter case, you can define your own channel list.
 
 ### Predefined channel lists
 
@@ -92,7 +93,7 @@ country.
 
 ### Define your own channel list
 
-There are three use cases for an own channel list:
+There are 3 use cases for an own channel list:
 
 #### Use case 1: Zattoo menu is not shown
 
@@ -119,10 +120,9 @@ correct configuration entry must look like this: `de,arte=DE_arte`.
 #### Use case 2: Zattoo menu is shown, but the channel does not exist in Zattoo
 
 You use the correct country channel list, and you get the Zattoo menu, but Zattoo does not find the desired channel.
-This means, that the configuration in the channel list is wrong. For predefined list this should not happen. But maybe
-Zattoo recently renames a channel without making a redirect. Whatever, if it is happens it is up to you to follow the
-sames steps as in [Use case 1: Zattoo menu is not shown](#use-case-1:-zattoo-menu-is not-shown) and correct the Zattoo
-channel name.
+This means, that the configuration in the channel list is wrong. For predefined lists this should not happen. But maybe
+Zattoo recently renames a channel without making a redirect. Whatever, if it happens it is up to you to follow the steps
+in [Use case 1: Zattoo menu is not shown](#use-case-1:-zattoo-menu-is-not-shown) and correct the Zattoo channel name.
 
 #### Use case 3: Subscribing all channels of a country channel list.
 
@@ -251,11 +251,10 @@ Which channel page is used depends on the selected `Source` channel list.
 If the Zattoo channel name is not found it will be highlighted in red. Unfortunately, this is not a guarantee that the
 channel name is valid. On the Austrian page there are two channels which are misspelled. Therefore, the
 channels `kabel_eins_doku_at` and `mtvgermany` are highlighted in red, even they are correct. The same for the German
-page where `deutschewelle_de` is misspelled.
+page where `deutschewelle_de` is misspelled. 
 
 The `Save` button stores your changes in your local settings. If you press `OK` or `Apply` in the main Window, your
 changes are saved as well. The `Reset` button can only undo changes which where not saved before.
----
 
 ## Acknowledgements
 
