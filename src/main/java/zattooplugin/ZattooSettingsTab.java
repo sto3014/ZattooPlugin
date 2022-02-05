@@ -242,32 +242,35 @@ public final class ZattooSettingsTab implements SettingsTab {
         });
         builder.add(mUpdateCustomChannels, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
-        // Update by replace
-        //builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
-        builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.nextRow(1);
-        mUpdateByReplace = new JRadioButton(mLocalizer.msg("updateByReplace", "updateByReplace"), mSettings.getUpdateByReplace());
-        builder.add(mUpdateByReplace, cc.xyw(4, builder.getRow(), builder.getColumnCount() - 3));
         // Update by merge
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(1);
         JRadioButton mUpdateByMerge = new JRadioButton(mLocalizer.msg("updateByMerge", "updateByMerge"), mSettings.getUpdateByMerge());
         builder.add(mUpdateByMerge, cc.xyw(4, builder.getRow(), builder.getColumnCount() - 3));
-        // Group
-        ButtonGroup buttonGroupUpdate = new ButtonGroup();
-        buttonGroupUpdate.add(mUpdateByReplace);
-        buttonGroupUpdate.add(mUpdateByMerge);
+
+        // Merge only new
+        builder.appendRow(FormSpecs.PREF_ROWSPEC);
+        builder.nextRow(1);
+        JRadioButton mMergeOnlyNew = new JRadioButton(mLocalizer.msg("mergeonlynew", "mergeonlynew"), mSettings.getMergeOnlyNew());
+        builder.add(mMergeOnlyNew, cc.xyw(6, builder.getRow(), builder.getColumnCount() - 5));
 
         // Merge and replace
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(1);
         mMergeAndReplace = new JRadioButton(mLocalizer.msg("mergeandreplace", "mergeandreplace"), mSettings.getMergeAndReplace());
         builder.add(mMergeAndReplace, cc.xyw(6, builder.getRow(), builder.getColumnCount() - 5));
-        // Merge only new
+
+        // Update by replace
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(1);
-        JRadioButton mMergeOnlyNew = new JRadioButton(mLocalizer.msg("mergeonlynew", "mergeonlynew"), mSettings.getMergeOnlyNew());
-        builder.add(mMergeOnlyNew, cc.xyw(6, builder.getRow(), builder.getColumnCount() - 5));
+        mUpdateByReplace = new JRadioButton(mLocalizer.msg("updateByReplace", "updateByReplace"), mSettings.getUpdateByReplace());
+        builder.add(mUpdateByReplace, cc.xyw(4, builder.getRow(), builder.getColumnCount() - 3));
+
+        // Group
+        ButtonGroup buttonGroupUpdate = new ButtonGroup();
+        buttonGroupUpdate.add(mUpdateByReplace);
+        buttonGroupUpdate.add(mUpdateByMerge);
+
         // Group
         ButtonGroup buttonGroupMerge = new ButtonGroup();
         buttonGroupMerge.add(mMergeAndReplace);

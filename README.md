@@ -10,10 +10,10 @@ The current plugin is based on their work.
 * Opens current program in Zattoo
 * Mark programs to be opened in Zattoo on start.
 * Filter by supported channels
-* New in 1.5: Add country channel list for Austria
-* New in 1.5: Add possibility to create your own channel list
+* New in 1.5: Create your own channel list
 * New in 1.5: Generate import file for all Zattoo channels
-* Update in 1.5: Channel lists for Germany and Switzerland were updated.
+* New in 1.5: Add country channel list for Austria
+* Update in 1.5: Update country channel lists for Germany and Switzerland.
 
 ## Requirements
 
@@ -110,8 +110,8 @@ channel recently. What to do?
     * Choose a `Source` country
     * Press `Apply Update` button
 
-By applying the update, for every source country channel a configuration is added in the editor below. On the left side of
-the equation sign you see the country and the name of the TV-Browser channel (Example: de,arte). Please do not change
+By applying the update, for every source country channel a configuration is added in the editor below. On the left side
+of the equation sign you see the country and the name of the TV-Browser channel (Example: de,arte). Please do not change
 it. On the right side you see the name of the Zattoo channel.   
 The channel for which the Zattoo menu does not appear will be listed, but the right side is empty. To get the name for
 the channel you must go into the Zattoo WebApp and start the desired channel. At the end of the URL the name is
@@ -128,9 +128,9 @@ in the previous use case and correct the Zattoo channel name.
 
 #### Use case 3: Subscribing all channels of a country channel list.
 
-A side effect of defining your own channel list is, that an import-file for TV-Browser channels is created as well. 
-So even if you do not have to change Zattoo channel names you can use this functionality to subscribe all channels
-for your country. Here is what you have to do:
+A side effect of defining your own channel list is, that an import-file for TV-Browser channels is created as well. So
+even if you do not have to change Zattoo channel names you can use this functionality to subscribe all channels for your
+country. Here is what you have to do:
 
 * Go to your plugin settings
 * Create your own channel list:
@@ -156,7 +156,6 @@ Now:
 * Press `Export/import channels`
 * Import java.zattooplugin.CustomChannelProperties.txt from your local settings directory listed above.
 
-
 ### Filters
 
 The filer `Zattoo: Supported Channels` shows only channels which have a valid entry in current channel list (
@@ -181,9 +180,9 @@ For detailed configuration please see [Usage](#usage) first.
   The `Country` drop-down list contains three predefined channel configurations for `Germany`, `Switzerland`
   and `Austria`
   . The `Own channel list` is empty by default and can be used for customization.
-  
-If you change your country also the source country (see next chapter) will be set to the same value. This is
-what you normally need if you start creating your own channel list.
+
+If you change your country also the source country (see next chapter) will be set to the same value. This is what you
+normally need if you start creating your own channel list.
 
 ### Create your own channel list
 
@@ -191,22 +190,20 @@ what you normally need if you start creating your own channel list.
   If checked, your own channel list will be updated when pressing `Apply updates`. If you press `OK`, `Cancel`
   or `Apply` in the main window, no update will happen.  
   After the update, `Update own channel list (only once)` will be un-checked.
-    * `Replace`  
-  All existing entries in your channel list will be removed first.  
-  Then all channels from the selected `Source` list will be added to your channel list.
     * `Merge`  
       Existing entries and entries from the selected `Source` list will be merged.
-        * `Add and replace`  
-      All channels from the selected `Source` list will be added to your channel list. I.e., existing entry which have
-      already a Zattoo channel name configured will be overwritten with new Zattoo channel names.   
-      Existing entries which are not part of the selected `Source` list are not changed.
         * `Add only new`  
-      All channels from the selected `Source` list will be added to your channel list. They will overwrite existing
-      entries only if the existing entries do not have a Zattoo channel name configured. Existing entries which are not
-      part of your subscribed channels are not changed.
+          All channels from the selected `Source` list will be added to your channel list. They will overwrite existing
+          entries only if the existing entries do not have a Zattoo channel name configured.
+        * `Add and replace`  
+          All channels from the selected `Source` list will be added to your channel list. I.e., existing entries which
+          have already a Zattoo channel name configured will be overwritten with new Zattoo channel names.
+    * `Replace`  
+      All existing entries in your channel list will be removed first.  
+      Then all channels from the selected `Source` list will be added to your channel list.
 
-If you check `Add only subscribed channels` your channel list will only display channels which were already
-subscribed. This is helpful if you have only a few channels subscribed, and you want to keep your list clearly arranged.
+If you check `Add only subscribed channels` your channel list will only display channels which were already subscribed.
+This is helpful if you have only a few channels subscribed, and you want to keep your list clearly arranged.
 
 The `Apply update` button just updates the list below. If you press `Cancel` in the main window the changes are lost.
 
@@ -235,7 +232,7 @@ Which channel page is used depends on the selected `Source` channel list.
 If the Zattoo channel name is not found it will be highlighted in red. Unfortunately, this is not a guarantee that the
 channel name is valid. On the Austrian page there are two channels which are misspelled. Therefore, the
 channels `kabel_eins_doku_at` and `mtvgermany` are highlighted in red, even they are correct. The same for the German
-page where `deutschewelle_de` is misspelled. 
+page where `deutschewelle_de` is misspelled.
 
 The `Save` button stores your changes in your local settings. If you press `OK` or `Apply` in the main Window, your
 changes are saved as well. The `Reset` button can only undo changes which where not saved before.
