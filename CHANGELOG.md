@@ -13,7 +13,7 @@ Reverse engineering of original Zattoo Plugin 1.0.2.0 from Bodo Tasche and Micha
 This version was never be made available for public.
 
 ### Added
-* Add Channel list for Austria
+* Add channel list for Austria
 ### Changed
 ### Fixed
 
@@ -21,7 +21,8 @@ This version was never be made available for public.
 ## [1.5.0.0]
 
 ### Added
-* Add own channel list.
+* Add possibility to create own channel list.
 ### Changed
 ### Fixed
+* Update channel list for Germany and Switzerland
 
