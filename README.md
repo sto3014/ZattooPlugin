@@ -140,7 +140,7 @@ do:
     * Un-check `Update only channels which are subscribed`
     * Press `Apply Update` button
 
-By applying the update all channels from your chosen country list are written into the following file:  
+By applying the update all channels from your chosen country list are written into the following file:
 
 | Operating system | Customized channel file |  
 |---|---|  
@@ -150,10 +150,10 @@ By applying the update all channels from your chosen country list are written in
 |Others     | /home/[username]/.tvbrowser/[version]/java.zattooplugin.CustomChannelProperties.txt |
 
 Now:
+
 * Go to `General settings` `Channels`
 * Press `Export/import channels`
 * Import java.zattooplugin.CustomChannelProperties.txt
-
 
 ### Filters
 
@@ -169,6 +169,63 @@ Remarks: This information will not be stored when TV-Browser is closed.
 ## Plugin Settings
 
 ---
+For detailed configuration please see [Usage](#usage) first.
+
+### General settings
+
+* `Country`  
+  The `Country` drop-down list contains three predefined channel configurations for `Germany`, `Switzerland`
+  and `Austria`
+  . The `Own channel list` is empty by default and can be used for customization.
+
+### Create your own channel list
+
+* `Update own channel list (only once)`  
+  If checked, your own channel list will be updated when pressing `Apply updates`. If you press `OK`, `Cancel`
+  or `Apply` in the main window, no update will happen.  
+  After the update, `Update own channel list (only once)` will be un-checked.
+
+The merge/replace process depends on if `Update only channels which are subscribed` is checked or not:
+
+&#9745; `Update only channels which are subscribed`
+
+* `Replace`  
+  All existing entries in our own channel list will be removed first.  
+  Then all your subscribed channels will be added to your own channel list. If a Zattoo channel name is found in the
+  selected `Source` list it will be added. Otherwise, the Zattoo channel name will be empty.
+    * `Merge`  
+      Existing entries and entries from the selected `Source` list will be merged.
+        * `Add and replace`  
+          All your subscribed channels will be added to your own channel list. This happens even when there was no
+          Zattoo channel name found in selected `Source` list. I.e., if an existing entry has a Zattoo channel name
+          configured it might be removed.   
+          Existing entries which are not part of your subscribed channels are not changed.
+        * `Add only new`  
+          All your subscribed channels will be added to your own channel list. They will overwrite existing entries only
+          if the existing entries do not have a Zattoo channel name configured. Zattoo channel names found in
+          selected `Source` list will be added.  
+          Existing entries which are not part of your subscribed channels are not changed.
+
+&#9744; `Update only channels which are subscribed`
+
+* `Replace`  
+  All existing entries in our own channel list will be removed first.  
+  Then all channels from the selected `Source` list will be added to your own channel list.
+    * `Merge`  
+      Existing entries and entries from the selected `Source` list will be merged.
+        * `Add and replace`  
+          All channels from the selected `Source` list will be added to your own channel list. I.e., existing entry
+          which have already a Zattoo channel name configured will be overwritten with new Zattoo channel names.   
+          Existing entries which are not part of the selected `Source` list are not changed.
+        * `Add only new`  
+          All channels from the selected `Source` list will be added to your own channel list. They will overwrite
+          existing entries only if the existing entries do not have a Zattoo channel name configured. Existing entries
+          which are not part of your subscribed channels are not changed.
+
+The `Apply update` button just updates the list below. If you press `Cancel` in the main window the changes are lost.
+
+### Adopt your own channel list
+
 Your customized channel list is stored in a file. You can edit/save it in the `Adopt your own channel list` area in the
 TV-Browser settings panel. If your prefer, you can edit it in a text editor of your choice.
 
@@ -182,6 +239,19 @@ TV-Browser settings panel. If your prefer, you can edit it in a text editor of y
 If there is a format error in your file, only the correct entries will be used. But you can see all entries in the
 plugin-settings. If you store the file here the plugin tells you the lines which are not valid.
 
+The `Verify Zattoo names` button looks if given Zattoo channel names exist on the Zattoo channel page
+
+* [German channel page](https://zattoo.com/de/sender)
+* [Switzerland channel page](https://zattoo.com/ch/sender)
+* [Austria channel page](https://zattoo.com/at/sender)
+
+If the name is not found it will be highlighted in red. But this is not a guarantee that the channel name is valid. On
+the Austrian page there are two channels which are misspelled. Therefore, the channels `kabel_eins_doku_at`
+and `mtvgermany` are highlighted in red, even they are correct.  
+I could not verify the channels for Germany and Switzerland, because I have only a Zattoo subscription for Austria.
+
+The `Save` button stores your changes in your local settings. If you press `OK` or `Apply` in the main Window, your changes
+are saved as well. The `Reset` button can only undo changes which where not saved before.
 ---
 
 ## Acknowledgements

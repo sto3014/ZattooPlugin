@@ -100,11 +100,12 @@ public final class ZattooSettingsTab implements SettingsTab {
         CellConstraints cc = new CellConstraints();
         PanelBuilder builderMain = new PanelBuilder(
                 new FormLayout("0px:g"
-                        , "pref,10dlu,pref,10dlu,pref"), new JPanel());
-        builderMain.add(createCountryPanel(), cc.xy(1, 1));
-        builderMain.add(createCustomChannelPanel(), cc.xy(1, 3));
-        mFilePanel = createFilePanel();
-        builderMain.add(mFilePanel, cc.xy(1, 5));
+                        , "10dlu,pref,10dlu,pref,10dlu,pref"), new JPanel());
+
+        //builderMain.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
+        builderMain.add(createGeneralSettingsPanel(), cc.xy(1, 2));
+        builderMain.add(createCustomChannelPanel(), cc.xy(1, 4));
+        builderMain.add(createFilePanel(), cc.xy(1, 6));
         return builderMain.getPanel();
     }
 
@@ -155,18 +156,18 @@ public final class ZattooSettingsTab implements SettingsTab {
      *
      * @return the j panel
      */
-    private JPanel createCountryPanel() {
+    private JPanel createGeneralSettingsPanel() {
         CellConstraints cc = new CellConstraints();
 
         PanelBuilder builder = new PanelBuilder(
                 new FormLayout("5dlu,pref,5dlu,pref,0px:g"
                         , ""));
 
-        // Hints
+        // Intro
         builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.setRow(builder.getRowCount());
-        JEditorPane textGeneralHint = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("countryHint", "countryHint"));
+        JEditorPane textGeneralHint = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("intro", "intro"));
         builder.add(textGeneralHint, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
         ZattooCountry[] countries = new ZattooCountry[]{
@@ -185,7 +186,13 @@ public final class ZattooSettingsTab implements SettingsTab {
         builder.add(new JLabel(mLocalizer.msg("country", "Country:")), cc.xy(2, builder.getRow()));
         builder.add(mCountry, cc.xy(4, builder.getRow()));
 
-        return builder.getPanel();
+        builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
+
+        JPanel panel = builder.getPanel();
+        Border border = new TitledBorder(mLocalizer.msg("generalSettings", "generalSettings"));
+        panel.setBorder(border);
+
+        return panel;
     }
 
     /**
@@ -199,17 +206,10 @@ public final class ZattooSettingsTab implements SettingsTab {
                 new FormLayout("5dlu,10dlu,5dlu,10dlu,5dlu,10dlu,5dlu,pref,0px:g"
                         , ""));
 
-        // Hints
-        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
-        builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.setRow(builder.getRowCount());
-        JTextArea textGeneralHint = UiUtilities.createHelpTextArea(mLocalizer.msg("customHint", "customHint"));
-        builder.add(textGeneralHint, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
-
         // Update custom channels
         builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.nextRow(2);
+        builder.setRow(builder.getRowCount());
         mUpdateCustomChannels = new JCheckBox(mLocalizer.msg("updateCustomChannels", "updateCustomChannels"), false);
         mUpdateCustomChannels.addActionListener(e -> {
             if (mUpdateCustomChannels.isSelected())
@@ -335,12 +335,6 @@ public final class ZattooSettingsTab implements SettingsTab {
         PanelBuilder builder = new PanelBuilder(
                 new FormLayout("5dlu,pref,5dlu,pref,0px:g"
                         , ""));
-
-        builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
-        builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.setRow(builder.getRowCount());
-        JTextArea textPropertyFileHint = UiUtilities.createHelpTextArea(mLocalizer.msg("propertyFileHint", "Hint"));
-        builder.add(textPropertyFileHint, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
         //  button bar
         builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
