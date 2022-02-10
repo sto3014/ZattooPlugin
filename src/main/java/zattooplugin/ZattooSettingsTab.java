@@ -17,9 +17,16 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.text.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
 import java.io.IOException;
 import java.net.*;
 import java.util.Scanner;
@@ -112,9 +119,9 @@ public final class ZattooSettingsTab implements SettingsTab {
     public void saveSettings() {
         if (mSaveBtn.isEnabled()) {
             if (saveEditor(mEditor, mCustomChannelProperties)) {
-                JFrame frame = new JFrame("Info");
-                JOptionPane.showMessageDialog(frame,
-                        mLocalizer.msg("saveOnExit", "saveOnExit"));
+//                JFrame frame = new JFrame("Info");
+//                JOptionPane.showMessageDialog(frame,
+//                        mLocalizer.msg("saveOnExit", "saveOnExit"));
                 mSaveBtn.setEnabled(false);
             }
         }
@@ -180,6 +187,22 @@ public final class ZattooSettingsTab implements SettingsTab {
 
         mCountry = new JComboBox(countries);
         mCountry.setSelectedItem(new ZattooCountry(mSettings.getCountry(), ""));
+        mCountry.addVetoableChangeListener(new VetoableChangeListener() {
+            @Override
+            public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
+                if ( ! ((ZattooCountry) mCountry.getSelectedItem()).getCode().equals(CustomChannelProperties.COUNTRY_CODE)){
+                    mSourceCountry.setSelectedItem( new ZattooCountry(mSettings.getCountry(), ""));
+                }
+            }
+        });
+        mCountry.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if ( ! ((ZattooCountry) mCountry.getSelectedItem()).getCode().equals(CustomChannelProperties.COUNTRY_CODE)){
+                    mSourceCountry.setSelectedItem( mCountry.getSelectedItem());
+                }
+            }
+        });
         builder.appendRow(FormSpecs.PARAGRAPH_GAP_ROWSPEC);
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.setRow(builder.getRowCount());
@@ -219,32 +242,35 @@ public final class ZattooSettingsTab implements SettingsTab {
         });
         builder.add(mUpdateCustomChannels, cc.xyw(2, builder.getRow(), builder.getColumnCount() - 1));
 
-        // Update by replace
-        //builder.appendRow(FormSpecs.LINE_GAP_ROWSPEC);
-        builder.appendRow(FormSpecs.PREF_ROWSPEC);
-        builder.nextRow(1);
-        mUpdateByReplace = new JRadioButton(mLocalizer.msg("updateByReplace", "updateByReplace"), mSettings.getUpdateByReplace());
-        builder.add(mUpdateByReplace, cc.xyw(4, builder.getRow(), builder.getColumnCount() - 3));
         // Update by merge
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(1);
         JRadioButton mUpdateByMerge = new JRadioButton(mLocalizer.msg("updateByMerge", "updateByMerge"), mSettings.getUpdateByMerge());
         builder.add(mUpdateByMerge, cc.xyw(4, builder.getRow(), builder.getColumnCount() - 3));
-        // Group
-        ButtonGroup buttonGroupUpdate = new ButtonGroup();
-        buttonGroupUpdate.add(mUpdateByReplace);
-        buttonGroupUpdate.add(mUpdateByMerge);
+
+        // Merge only new
+        builder.appendRow(FormSpecs.PREF_ROWSPEC);
+        builder.nextRow(1);
+        JRadioButton mMergeOnlyNew = new JRadioButton(mLocalizer.msg("mergeonlynew", "mergeonlynew"), mSettings.getMergeOnlyNew());
+        builder.add(mMergeOnlyNew, cc.xyw(6, builder.getRow(), builder.getColumnCount() - 5));
 
         // Merge and replace
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(1);
         mMergeAndReplace = new JRadioButton(mLocalizer.msg("mergeandreplace", "mergeandreplace"), mSettings.getMergeAndReplace());
         builder.add(mMergeAndReplace, cc.xyw(6, builder.getRow(), builder.getColumnCount() - 5));
-        // Merge only new
+
+        // Update by replace
         builder.appendRow(FormSpecs.PREF_ROWSPEC);
         builder.nextRow(1);
-        JRadioButton mMergeOnlyNew = new JRadioButton(mLocalizer.msg("mergeonlynew", "mergeonlynew"), mSettings.getMergeOnlyNew());
-        builder.add(mMergeOnlyNew, cc.xyw(6, builder.getRow(), builder.getColumnCount() - 5));
+        mUpdateByReplace = new JRadioButton(mLocalizer.msg("updateByReplace", "updateByReplace"), mSettings.getUpdateByReplace());
+        builder.add(mUpdateByReplace, cc.xyw(4, builder.getRow(), builder.getColumnCount() - 3));
+
+        // Group
+        ButtonGroup buttonGroupUpdate = new ButtonGroup();
+        buttonGroupUpdate.add(mUpdateByReplace);
+        buttonGroupUpdate.add(mUpdateByMerge);
+
         // Group
         ButtonGroup buttonGroupMerge = new ButtonGroup();
         buttonGroupMerge.add(mMergeAndReplace);

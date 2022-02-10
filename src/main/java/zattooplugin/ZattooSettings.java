@@ -172,7 +172,7 @@ public class ZattooSettings {
     }
 
     public boolean getUseOnlySubscribedChannels() {
-        return mProperties.getProperty(KEY_USE_ONLY_SUBSCRIBED_CHANNELS, "true").equalsIgnoreCase("true");
+        return mProperties.getProperty(KEY_USE_ONLY_SUBSCRIBED_CHANNELS, "false").equalsIgnoreCase("true");
     }
 
     public void setUseOnlySubscribedChannels( boolean useOnlySubscribedChannels) {
