@@ -29,7 +29,9 @@ The current plugin is based on their work.
 ## Installation
 
 ---
+
 ### Installation in TV-Browser
+
 1. Go to `Tools`, `Install/Update Plugins...`
 2. Check `Zattoo 1.5.0.1`
 3. Press `Download selected plugins`
@@ -215,7 +217,7 @@ normally need if you start creating your own channel list.
 
 If you check `Add only subscribed channels` your channel list will only include channels which were already subscribed.
 You need this if you want to add a TV-Browser channel for which no Zattoo information is provided in the country channel
-list. 
+list.
 
 The `Apply update` button just updates the list below. If you press `Cancel` in the main window the changes are lost.
 
@@ -244,7 +246,7 @@ Which channel page is used depends on the selected `Source` channel list.
 If the Zattoo channel name is not found it will be highlighted in red. Unfortunately, this is not a guarantee that the
 channel name is valid. On the Austrian page there are two channels which are misspelled. Therefore, the
 channels `kabel_eins_doku_at` and `mtvgermany` are highlighted in red, even they are correct. The same for the German
-page where `deutschewelle_de` is misspelled.
+and Swiss page where `deutschewelle_de` is not listed at all.
 
 The `Save` button stores your changes in your local settings. If you press `OK` or `Apply` in the main Window, your
 changes are saved as well. The `Reset` button can only undo changes which where not saved before.
