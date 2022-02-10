@@ -29,6 +29,15 @@ The current plugin is based on their work.
 ## Installation
 
 ---
+### Installation in TV-Browser
+1. Go to `Tools`, `Install/Update Plugins...`
+2. Check `Zattoo 1.5.0.1`
+3. Press `Download selected plugins`
+4. Restart TV-Browser
+5. Confirm installation was successful
+    * Go to TV-Browser preferences
+    * Under `Plugins` you should see an entry named `Zattoo`  
+      <img src="./images/Preferences.png" width="200"/>
 
 ### Manuall installation
 
@@ -107,11 +116,12 @@ channel recently. What to do?
 * Create your own channel list:
     * Set the `Country` to `Own channel list`
     * Check the `Update own channel list` box
-    * Choose a `Source` country
+    * Choose a `Source` country (normally the country for which you have a Zattoo subscription)
+    * Check  `Add only subscribed channels`
     * Press `Apply Update` button
 
-By applying the update, for every source country channel a configuration is added in the editor below. On the left side
-of the equation sign you see the country and the name of the TV-Browser channel (Example: de,arte). Please do not change
+By applying the update, for every subscribed channel a configuration is added in the editor below. On the left side of
+the equation sign you see the country and the name of the TV-Browser channel (Example: de,arte). Please do not change
 it. On the right side you see the name of the Zattoo channel.   
 The channel for which the Zattoo menu does not appear will be listed, but the right side is empty. To get the name for
 the channel you must go into the Zattoo WebApp and start the desired channel. At the end of the URL the name is
@@ -135,7 +145,8 @@ country. Here is what you have to do:
 * Go to your plugin settings
 * Create your own channel list:
     * Check the `Update own channel list` box
-    * Choose a `Source` country
+    * Choose a `Source` country (normally the country for which you have a Zattoo subscription)
+    * Un-check  `Add only subscribed channels`
     * Press `Apply Update` button
 
 Remarks: For this use case it is not necessary to set the `Country` to `Own channel list`.
@@ -202,8 +213,9 @@ normally need if you start creating your own channel list.
       All existing entries in your channel list will be removed first.  
       Then all channels from the selected `Source` list will be added to your channel list.
 
-If you check `Add only subscribed channels` your channel list will only display channels which were already subscribed.
-This is helpful if you have only a few channels subscribed, and you want to keep your list clearly arranged.
+If you check `Add only subscribed channels` your channel list will only include channels which were already subscribed.
+You need this if you want to add a TV-Browser channel for which no Zattoo information is provided in the country channel
+list. 
 
 The `Apply update` button just updates the list below. If you press `Cancel` in the main window the changes are lost.
 

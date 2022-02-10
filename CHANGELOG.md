@@ -26,3 +26,17 @@ This version was never be made available for public.
 ### Fixed
 * Update channel list for Germany and Switzerland
 
+## [1.5.0.1]
+
+### Added
+* Add EPG-Plus channel `DW English` to country channel list for Germany and Switzerland.
+* Add install documentation for installations in TV-Browser
+### Changed
+### Fixed
+Fix documentation:
+* Chapter Use case 1
+  `Add only subscribed channels` check-box must be checked
+* Chapter Use case 3
+  `Add only subscribed channels` check-box must be un-checked
+
+
