@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>at.homebrew.tvbrowser.zattooplugin</groupId>
     <artifactId>ZattooPlugin</artifactId>
-    <version>1.5.0.0</version>
+    <version>1.5.0.2</version>
     <packaging>jar</packaging>
     <name>ZattooPlugin</name>
 

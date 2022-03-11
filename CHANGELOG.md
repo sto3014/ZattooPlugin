@@ -39,4 +39,8 @@ Fix documentation:
 * Chapter Use case 3  
   `Add only subscribed channels` check-box must be un-checked
 
+## [1.5.0.2]
+### Fixed
+* Fixed German translation for error messages.
+
 

@@ -1,14 +1,12 @@
 package zattooplugin;
 
 import devplugin.*;
-import tvbrowser.core.ChannelList;
 import util.browserlauncher.Launch;
 import util.io.IOUtilities;
 import util.i18n.Localizer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -21,7 +19,7 @@ import java.util.logging.Logger;
  * @since 1.0.0.0
  */
 public final class ZattooPlugin extends Plugin {
-    private static final Version PLUGIN_VERSION = new Version(1, 50, 1, true);
+    private static final Version PLUGIN_VERSION = new Version(1, 50, 2, true);
     private static final Localizer mLocalizer = Localizer.getLocalizerFor(ZattooPlugin.class);
     private static final Logger mLog = Logger.getLogger(ZattooPlugin.class.getName());
     private ImageIcon mIcon;
