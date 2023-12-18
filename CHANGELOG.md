@@ -43,4 +43,9 @@ Fix documentation:
 ### Fixed
 * Fixed German translation for error messages.
 
+## [1.5.0.3]
+
+### Fixed
+
+* Fixed a problem with the verification of Zattoo names.
 

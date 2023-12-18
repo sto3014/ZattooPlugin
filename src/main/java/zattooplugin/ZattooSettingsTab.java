@@ -608,7 +608,7 @@ public final class ZattooSettingsTab implements SettingsTab {
                 if (keyValuePair.countTokens() == 2) {
                     keyValuePair.nextToken();
                     String zattooChannel = keyValuePair.nextToken();
-                    if (!zattooChannels.contains("\"/live/" + zattooChannel + "\"")) {
+                    if (!zattooChannels.contains("/live/" + zattooChannel + "\"")) {
                         if (firstLineNo < 0) firstLineNo = lineNo;
                         int startIndex = textArea.getLineEndOffset(lineNo) - (zattooChannel.length() + 1);
                         int endIndex = textArea.getLineEndOffset(lineNo);

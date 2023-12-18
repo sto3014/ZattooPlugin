@@ -92,11 +92,11 @@ channel is just not configured to know the Zattoo channel. In latter case, you c
 The existing country channel list for Germany, Switzerland and Austria should cover all channel information for your
 country.
 
-|Country     | No. of Zattoo channels    | Zattoo Website     |  No. of linked TVB channels<sup>1</sup> |
-|------------|:---------------------------:|--------------------|:-----------------------------:|
-|Germany     | 141 | [Zattoo Germany](https://zattoo.com/de/sender)  | 66<sup>3</sup>|
-|Switzerland | 282 | [Zattoo Switzerland](https://zattoo.com/ch/sender) |94<sup>2</sup>|
-|Austria     | 98  | [Zattoo Austria](https://zattoo.com/at/sender)|59<sup>3</sup>|
+|Country     | No. of Zattoo channels | Zattoo Website     |  No. of linked TVB channels<sup>1</sup> |
+|------------|:----------------------:|--------------------|:-----------------------------:|
+|Germany     |          178           | [Zattoo Germany](https://zattoo.com/de/sender)  | 66<sup>3</sup>|
+|Switzerland |          336           | [Zattoo Switzerland](https://zattoo.com/ch/sender) |94<sup>2</sup>|
+|Austria     |          132           | [Zattoo Austria](https://zattoo.com/at/sender)|59<sup>3</sup>|
 
 <sup>1</sup> Data plugins EPGfree-data and [EPG-Plus](https://epg-plus.com) were used.  
 <sup>2</sup> EPG-Plus provides 35 channels. So it is worth a look.  

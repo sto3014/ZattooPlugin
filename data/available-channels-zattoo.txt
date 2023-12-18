@@ -1,0 +1,462 @@
+/Users/dieterstockhausen/Library/Java/JavaVirtualMachines/corretto-17.0.2/Contents/Home/bin/java -javaagent:/Applications/IntelliJ IDEA CE.app/Contents/lib/idea_rt.jar=51816:/Applications/IntelliJ IDEA CE.app/Contents/bin -Dfile.encoding=UTF-8 -classpath /Users/dieterstockhausen/Projekte/ZattooCrawler/target/classes:/Users/dieterstockhausen/.m2/repository/org/jetbrains/annotations/23.0.0/annotations-23.0.0.jar:/Users/dieterstockhausen/.m2/repository/org/jsoup/jsoup/1.15.4/jsoup-1.15.4.jar:/Users/dieterstockhausen/.m2/repository/net/sourceforge/htmlunit/htmlunit/2.70.0/htmlunit-2.70.0.jar:/Users/dieterstockhausen/.m2/repository/org/apache/httpcomponents/httpmime/4.5.14/httpmime-4.5.14.jar:/Users/dieterstockhausen/.m2/repository/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar:/Users/dieterstockhausen/.m2/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar:/Users/dieterstockhausen/.m2/repository/net/sourceforge/htmlunit/htmlunit-core-js/2.70.0/htmlunit-core-js-2.70.0.jar:/Users/dieterstockhausen/.m2/repository/net/sourceforge/htmlunit/neko-htmlunit/2.70.0/neko-htmlunit-2.70.0.jar:/Users/dieterstockhausen/.m2/repository/net/sourceforge/htmlunit/htmlunit-cssparser/1.14.0/htmlunit-cssparser-1.14.0.jar:/Users/dieterstockhausen/.m2/repository/net/sourceforge/htmlunit/htmlunit-xpath/2.70.0/htmlunit-xpath-2.70.0.jar:/Users/dieterstockhausen/.m2/repository/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar:/Users/dieterstockhausen/.m2/repository/org/apache/commons/commons-text/1.10.0/commons-text-1.10.0.jar:/Users/dieterstockhausen/.m2/repository/commons-io/commons-io/2.10.0/commons-io-2.10.0.jar:/Users/dieterstockhausen/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/dieterstockhausen/.m2/repository/commons-net/commons-net/3.9.0/commons-net-3.9.0.jar:/Users/dieterstockhausen/.m2/repository/commons-codec/commons-codec/1.15/commons-codec-1.15.jar:/Users/dieterstockhausen/.m2/repository/org/brotli/dec/0.1.2/dec-0.1.2.jar:/Users/dieterstockhausen/.m2/repository/com/shapesecurity/salvation2/3.0.1/salvation2-3.0.1.jar:/Users/dieterstockhausen/.m2/repository/org/eclipse/jetty/websocket/websocket-client/9.4.50.v20221201/websocket-client-9.4.50.v20221201.jar:/Users/dieterstockhausen/.m2/repository/org/eclipse/jetty/jetty-client/9.4.50.v20221201/jetty-client-9.4.50.v20221201.jar:/Users/dieterstockhausen/.m2/repository/org/eclipse/jetty/jetty-http/9.4.50.v20221201/jetty-http-9.4.50.v20221201.jar:/Users/dieterstockhausen/.m2/repository/org/eclipse/jetty/jetty-util/9.4.50.v20221201/jetty-util-9.4.50.v20221201.jar:/Users/dieterstockhausen/.m2/repository/org/eclipse/jetty/jetty-io/9.4.50.v20221201/jetty-io-9.4.50.v20221201.jar:/Users/dieterstockhausen/.m2/repository/org/eclipse/jetty/websocket/websocket-common/9.4.50.v20221201/websocket-common-9.4.50.v20221201.jar:/Users/dieterstockhausen/.m2/repository/org/eclipse/jetty/websocket/websocket-api/9.4.50.v20221201/websocket-api-9.4.50.v20221201.jar:/Users/dieterstockhausen/.m2/repository/org/slf4j/slf4j-simple/1.7.32/slf4j-simple-1.7.32.jar:/Users/dieterstockhausen/.m2/repository/org/slf4j/slf4j-api/1.7.32/slf4j-api-1.7.32.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-java/4.16.1/selenium-java-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-api/4.16.1/selenium-api-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-chrome-driver/4.16.1/selenium-chrome-driver-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/com/google/auto/service/auto-service-annotations/1.1.1/auto-service-annotations-1.1.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-chromium-driver/4.16.1/selenium-chromium-driver-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-json/4.16.1/selenium-json-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-manager/4.16.1/selenium-manager-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-devtools-v118/4.16.1/selenium-devtools-v118-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-devtools-v119/4.16.1/selenium-devtools-v119-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-devtools-v120/4.16.1/selenium-devtools-v120-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-devtools-v85/4.16.1/selenium-devtools-v85-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-edge-driver/4.16.1/selenium-edge-driver-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-firefox-driver/4.16.1/selenium-firefox-driver-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-http/4.16.1/selenium-http-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/dev/failsafe/failsafe/3.3.2/failsafe-3.3.2.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-ie-driver/4.16.1/selenium-ie-driver-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-remote-driver/4.16.1/selenium-remote-driver-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/com/google/guava/guava/32.1.2-jre/guava-32.1.2-jre.jar:/Users/dieterstockhausen/.m2/repository/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar:/Users/dieterstockhausen/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/Users/dieterstockhausen/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:/Users/dieterstockhausen/.m2/repository/org/checkerframework/checker-qual/3.33.0/checker-qual-3.33.0.jar:/Users/dieterstockhausen/.m2/repository/com/google/errorprone/error_prone_annotations/2.18.0/error_prone_annotations-2.18.0.jar:/Users/dieterstockhausen/.m2/repository/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-api/1.28.0/opentelemetry-api-1.28.0.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-context/1.28.0/opentelemetry-context-1.28.0.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-exporter-logging/1.28.0/opentelemetry-exporter-logging-1.28.0.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-sdk-metrics/1.28.0/opentelemetry-sdk-metrics-1.28.0.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-extension-incubator/1.28.0-alpha/opentelemetry-extension-incubator-1.28.0-alpha.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-sdk-logs/1.28.0/opentelemetry-sdk-logs-1.28.0.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-sdk-common/1.28.0/opentelemetry-sdk-common-1.28.0.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-sdk-extension-autoconfigure-spi/1.28.0/opentelemetry-sdk-extension-autoconfigure-spi-1.28.0.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-sdk-extension-autoconfigure/1.28.0/opentelemetry-sdk-extension-autoconfigure-1.28.0.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-api-events/1.28.0-alpha/opentelemetry-api-events-1.28.0-alpha.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-sdk-trace/1.28.0/opentelemetry-sdk-trace-1.28.0.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-sdk/1.28.0/opentelemetry-sdk-1.28.0.jar:/Users/dieterstockhausen/.m2/repository/io/opentelemetry/opentelemetry-semconv/1.28.0-alpha/opentelemetry-semconv-1.28.0-alpha.jar:/Users/dieterstockhausen/.m2/repository/net/bytebuddy/byte-buddy/1.14.5/byte-buddy-1.14.5.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-os/4.16.1/selenium-os-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/apache/commons/commons-exec/1.3/commons-exec-1.3.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-safari-driver/4.16.1/selenium-safari-driver-4.16.1.jar:/Users/dieterstockhausen/.m2/repository/org/seleniumhq/selenium/selenium-support/4.16.1/selenium-support-4.16.1.jar at.homebrew.zattoocrawler.Crawler >stdout.txt
+Channels available on Zattoo
+Found 132 channels for Austria.
+Found 178 channels for Germany.
+Found 336 channels for Switzerland.
+In total 456
+123tv:1-2-3 TV HD:::de:true
+1fltv_li:1FLTV HD::ch::true
+1plus1_ua:1+1:at:ch:de:true
+20_mediaset_it:20 Mediaset::ch::true
+27_twentyseven_it:27 Twentyseven::ch::true
+3plus:3+ HD::ch::true
+3sat:3Sat HD:at:ch:de:true
+4music_uk:4Music::ch::true
+4plus:4+ HD::ch::true
+4seven_uk:4Seven::ch::true
+5action_uk:5ACTION::ch::true
+5plus_ch:5+ HD::ch::true
+5star_uk:5STAR::ch::true
+5usa:5USA::ch::true
+6plus_ch:6+ HD::ch::true
+6ter:6ter::ch::true
+a_tv:Augsburg TV:::de:true
+al-jazeera:Al Jazeera English HD:at:ch:de:true
+al-jazeera-arabic:Al Jazeera HD:at:ch:de:true
+al_jazeera_balkans_int:Al Jazeera Balkans HD:at:::true
+allgaeu_tv_de:Allgäu TV:::de:true
+alma_tv_it:Alma TV HD::ch::true
+anixe_hd:Anixe HD::ch::true
+anixe_plus:Anixe+::ch::true
+ard:Das Erste HD:at:ch::true
+arirang_kr:Arirang TV HD:at:ch:de:true
+arte-france:ARTE [fr] HD::ch::true
+atv:ATV:at:::true
+atv2:ATV II:at:::true
+auftanken_tv_ch:Auftanken TV HD::ch::true
+baden_tv_de:Baden TV:::de:true
+baden_tv_sued_de:Baden TV Süd HD:::de:true
+bbc-arabic:BBC Arabic::ch::true
+bbc-four:BBC Four HD::ch::true
+bbc-parliament:BBC Parliament::ch::true
+bbc-world-service:BBC News HD::ch::true
+bbc2:BBC Two HD::ch::true
+bbc_alba_uk:BBC Alba HD::ch::true
+bbc_news:BBC News HD::ch::true
+bbc_one_london_uk:BBC One London ::ch::true
+bbc_rb_1_uk:BBC Red Button 1 HD ::ch::true
+bbc_scotland_uk:BBC Scotland HD::ch::true
+bbc_three_uk:BBC Three::ch::true
+beauty_tv_de:Beauty TV::ch::true
+becurioustv:Tele Swizz::ch::true
+bfmtv:BFM TV HD::ch::true
+bibeltv:Bibel TV HD:at:ch:de:true
+bild_de:BILD HD::ch::true
+bloomberg-europe:Bloomberg TV:at:ch:de:true
+bloomberg_quicktake_int:Bloomberg Originals:at:ch:de:true
+blue_zoom:blue Zoom HD::ch::true
+blue_zoom_fr:blue Zoom F HD::ch::true
+boing:Boing::ch::true
+boing_plus_it:Boing Plus::ch::true
+br:BR Fernsehen Süd::ch:de:true
+br-alpha:ARD-alpha HD:at:ch:de:true
+br_nord:BR Fernsehen Nord:at::de:true
+bvn:BVN::ch::true
+canal24horas:24H HD::ch::true
+canal9:Canal9::ch::true
+canalalpha:Canal Alpha NE HD::ch::true
+canalalphajura:Canal Alpha JU HD::ch::true
+canale-5:Canale 5 HD::ch::true
+canale_italia:Canale Italia::ch::true
+cartoonito_it:Cartoonito::ch::true
+cbbc:CBBC HD::ch::true
+cbeebies:CBeebies HD::ch::true
+cbs_reality_uk:True Crime::ch::true
+challenge_uk:Challenge::ch::true
+channel-4:Channel 4 HD::ch::true
+channel21:Channel 21 HD:at::de:true
+cherie25:Chérie 25::ch::true
+chilled_tv:Now 90s::ch::true
+cielo:Cielo::ch::true
+cine34_it:Cine 34::ch::true
+class_tv_moda:Class TV Moda::ch::true
+clubland_tv:Clubland TV::ch::true
+cnbc:CNBC Europe::ch::true
+cnn-international:CNN International HD:at:ch:de:true
+comedycentral_de:Comedy Central HD:at:ch:de:true
+craction_tv_de:Craction:at:ch:de:true
+curiosity_now_de:Curiosity Now:at:ch:de:true
+current_time_tv_int:Current Time TV:at:ch:de:true
+d17:CSTAR HD::ch::true
+daf:Der Aktionär TV HD::ch:de:true
+das_erste_de:Das Erste HD:::de:true
+dave_uk:Dave::ch::true
+dazn_fast_de:DAZN FAST:at::de:true
+dazn_rise_de:DAZN RISE:at::de:true
+DE_arte:ARTE HD:at:ch:de:true
+de_sixx:Sixx HD::ch::true
+deluxe-music:DELUXE MUSIC:at:ch:de:true
+deluxe_dance_de:Deluxe Dance by Kontor::ch::true
+deluxe_flashback_de:Deluxe Flashback::ch::true
+deluxe_rap_de:Deluxe Rap::ch::true
+deluxe_rock_de:Deluxe Rock::ch::true
+deutschesmusikfernsehen:Deutsches Musik Fernsehen:at:ch:de:true
+deutschewelle_ar:Deutsche Welle Arabic:at:ch::true
+deutschewelle_de:Deutsche Welle:at:ch::true
+deutschewelle_en_dach:Deutsche Welle [en]:at:ch::true
+deutschewelle_es:Deutsche Welle Spanish:at:ch::true
+direct-8:C8 HD::ch::true
+disney:Disney Channel::ch::true
+dmax:DMAX HD::ch:de:true
+dmax_uk:DMAX UK::ch::true
+dmaxitalia:DMAX Italia::ch::true
+drama_uk:Drama::ch::true
+dsf:Sport1:at:ch:de:true
+e4:E4::ch::true
+e4_extra_uk:E4 Extra::ch::true
+einsextra:tagesschau24 HD:at:ch:de:true
+einsfestival:ONE HD:at:ch:de:true
+enquetes_de_choc_fr:Enquetes De Choc::ch::true
+eotv:More Than Sports TV HD:at:ch:de:true
+espreso_tv_ua:Espreso TV:at:ch:de:true
+euronews-en:EuroNews HD [en]:at:ch:de:true
+euronews-fr:Euronews HD [fr]:at:ch:de:true
+euronews_italian:Euronews HD [it]:at:ch:de:true
+euronewsgerman:Euronews HD [ger]:at:ch:de:true
+eurosport:Eurosport 1 HD::ch:de:true
+fabella_de:Fabella:at:ch:de:true
+fashiontv:Fashion TV HD::ch:de:true
+film4:Film 4::ch::true
+five:Channel 5 HD::ch::true
+focus_it:Focus::ch::true
+folx_tv_at:Folx TV:at:ch:de:true
+food_network_it:Food Network Italia HD::ch::true
+food_network_uk:Food Network::ch::true
+france-2:France 2 HD::ch::true
+france-24-en:France 24 HD [en]:at:ch:de:true
+france-24-fr:France 24 HD [fr]:at:ch:de:true
+france-3:France 3 HD::ch::true
+france-4:France 4 HD::ch::true
+france-5:France 5 HD::ch::true
+france_info:France Info::ch::true
+franken_fernsehen:Franken Fernsehen:::de:true
+freesports_uk:Viaplay Xtra::ch::true
+frisbee_it:Frisbee::ch::true
+giallo_it:Giallo::ch::true
+god-channel-tv:GOD TV::ch:de:true
+great_movies_action_uk:Great! Movies Action::ch::true
+great_movies_uk:Great! Movies::ch::true
+great_tv_uk:Great! TV::ch::true
+grjngo_de:Grjngo:at:ch:de:true
+gulli:Gulli HD::ch::true
+hd1:TF1 Séries Films::ch::true
+health_tv_de:Health TV:at:ch:de:true
+heimatkino_de:Heimatkino:at:ch:de:true
+helvetia_one_tv_ch:Helvetia One TV::ch::true
+hgtv_de:HGTV::ch:de:true
+hgtv_it:HGTV Italy::ch::true
+homicide_fr:Homicide::ch::true
+hr:HR:at:ch:de:true
+hse24:HSE 24 HD:at:ch:de:true
+hse24_extra:HSE24 Extra HD:at:ch:de:true
+hse24_trend:HSE24 Trend:at:ch:de:true
+i24news_english:i24NEWS [en]::ch::true
+i24news_french:i24NEWS [fr]::ch::true
+i_tele:CNEWS HD::ch::true
+iris:Iris::ch::true
+italia-1:Italia 1 HD::ch::true
+italia_2:Italia 2::ch::true
+itv-1-london:ITV 1 HD::ch::true
+itv-2:ITV 2::ch::true
+itv-3:ITV 3::ch::true
+itv-4:ITV 4::ch::true
+itvbe:ITVBe::ch::true
+k2_it:K2::ch::true
+kabel-eins:Kabel Eins HD::ch::true
+kabel1_doku:Kabel Eins Doku HD::ch:de:true
+kabel_eins_austria:Kabel Eins Österreich HD:at:::true
+kabel_eins_deutschland:Kabel Eins Deutschland HD:::de:true
+kabel_eins_doku_at:Kabel Eins Doku HD:at:::true
+kanal9:Kanal9::ch::true
+kbs_world:KBS World HD::ch::true
+kerrang_uk:Kerrang!::ch::true
+kika:Kika HD:at:ch:de:true
+kiss_tv:Kiss TV::ch::true
+krone_tv_at:Krone TV:at:::true
+kronehit_tv_at:Kronehit:at:::true
+kto:KTO::ch::true
+ktv:K-TV::ch::true
+la-7:La 7 HD::ch::true
+la_5:La5::ch::true
+la_7_d:La 7 d HD::ch::true
+landeskanal_li:Liechtensteiner Landeskanal ::ch::true
+latele:LaTele::ch::true
+lci:LCI HD::ch::true
+lemanbleu:Leman Bleu HD::ch::true
+lequipe21:L'Équipe::ch::true
+lfm_tv_ch:CARAC 3::ch::true
+m6-suisse:M6 Suisse HD::ch::true
+magic_uk:Magic UK::ch::true
+mdr-sachsen:MDR SACHSEN:at:ch:de:true
+mdr-sachsen-anhalt:MDR SACHSEN-ANHALT:::de:true
+mdr-thueringen:MDR THÜRINGEN:::de:true
+mediaset_extra:Mediaset Extra::ch::true
+meine_einkaufswelt_de:Meine Einkaufswelt:at:ch:de:true
+melodie_tv_at:Melodie TV::ch::true
+moconomy_de:Moconomy:at:ch:de:true
+more4:More 4::ch::true
+motor_trend_it:Motor Trend HD::ch::true
+moviedome_de:Moviedome:at:ch:de:true
+moviedome_family_de:Moviedome Family:at:ch::true
+mtvgermany:MTV:at:ch:de:true
+mtvitalia:TV8::ch::true
+muenchen_tv:münchen.tv:::de:true
+my5_uk:5SELECT::ch::true
+mytvplus_de:MyTVplus HD:::de:true
+n-tv:n-tv HD::ch::true
+n24:WELT HD:at:ch:de:true
+n24_doku:N24 Doku:at:ch:de:true
+nahe_tv_de:naheTV HD:::de:true
+naruto_de:Naruto :at:ch:de:true
+nasa_tv:NASA TV::ch::true
+ndr-hamburg:NDR Hamburg:::de:true
+ndr-mv:NDR Mecklenburg-Vorpommern:::de:true
+ndr-niedersachsen:NDR Niedersachsen:at:ch:de:true
+ndr-schleswig-holstein:NDR Schleswig-Holstein:::de:true
+netzkino_fast_de:Netzkino:at:ch:de:true
+nhk_world_jp:NHK WORLD-JAPAN:at:ch:de:true
+nick_7plus:Nick 7+::ch::true
+nick_cc_plus1:Nick/Comedy Central +1 HD:::de:true
+nickelodeon:Nick/Comedy Central +1 HD:at:::true
+niederbayern_tv_deggendorf_de:Niederbayern TV Deggendorf-Straubing:::de:true
+niederbayern_tv_landshut_de:Niederbayern TV Landshut:::de:true
+niederbayern_tv_passau_de:Niederbayern TV Passau:::de:true
+nove_it:NOVE::ch::true
+now_70s_uk:Now 70s::ch::true
+now_80s_uk:Now 80s::ch::true
+nrj-12:NRJ 12 HD::ch::true
+nrwision:NRWision HD:::de:true
+nt1:TFX HD::ch::true
+ntv_at:n-tv HD:at:::true
+ntv_de:n-tv HD:::de:true
+numero23:RMC Story::ch::true
+oberpfalz_tv_de:Oberpfalz TV:::de:true
+oe24_tv_at:oe24 TV:at:::true
+ok4_koblenz_de:OK4 HD:::de:true
+ok54_trier_de:OK54 Bürgerrundfunk Trier HD:::de:true
+ok_kaiserslautern_de:OK Kaiserslautern HD:::de:true
+ok_weinstrasse_de:OK Weinstraße HD:::de:true
+oktv_ludwigshafen_de:rheinlOKal HD:::de:true
+oktv_mainz_de:OKTV Mainz HD:::de:true
+oktv_suedwestpfalz_de:OK TV Südwestpfalz HD:::de:true
+one_music_television_de:One Music Television:at:ch:de:true
+one_tv_ch:CARAC 2::ch::true
+orf-1:ORF1 HD:at:ch::true
+orf-2:ORF2 HD:at:ch::true
+orf2_burgenland_at:ORF2 Burgenland:at:::true
+orf2_europe:ORF 2 Europe:::de:true
+orf2_kaernten_at:ORF2 Kärnten:at:::true
+orf2_niederoesterreich_at:ORF2 Niederösterreich:at:::true
+orf2_oberoesterreich_at:ORF2 Oberösterreich:at:::true
+orf2_salzburg_at:ORF2 Salzburg:at:::true
+orf2_steiermark_at:ORF2 Steiermark:at:::true
+orf2_tirol_at:ORF2 Tirol:at:::true
+orf2vorarlberg:ORF2 Vorarlberg:at:::true
+orf3:Orf III HD:at:ch::true
+orfsportplus:ORF Sport+:at:::true
+pbs_america:PBS America::ch::true
+phoenix:Phoenix HD:at:ch:de:true
+pick_uk:Pick::ch::true
+pro7_austria:Pro7 Deutschland HD:at:::true
+pro7_deutschland:Pro7 Deutschland HD:::de:true
+pro7maxx:ProSieben MAXX HD:::de:true
+pro7maxx_austria:ProSieben MAXX HD:at:::true
+pro7maxx_ch:ProSieben MAXX Schweiz HD::ch::true
+prosieben:Pro7 Schweiz HD::ch::true
+puls24_at:Puls24:at:::true
+puls4:Puls4:at:::true
+puls8:Puls 8 HD::ch::true
+qs24_ch:QS24:at:ch:de:true
+quest_red_uk:Quest Red::ch::true
+quest_uk:Quest HD::ch::true
+qvc_beauty_de:QVC Beauty:at::de:true
+qvc_germany:QVC HD:at::de:true
+qvcplus:QVC 2 HD:at::de:true
+r9_at:R9 Österreich HD:at:ch::true
+radio-bremen-tv:Radio Bremen TV:at:ch:de:true
+radio_freccia_it:Radio Freccia TV HD::ch::true
+radio_italia_tv:Radio Italia TV HD::ch::true
+radio_ticino_channel_ch:Radio Ticino Channel HD::ch::true
+radionorba_tv_it:Radionorba TV HD::ch::true
+rai-due:Rai Due HD::ch::true
+rai-tre:Rai Tre HD::ch::true
+rai-uno:Rai Uno HD::ch::true
+rai_4:Rai 4::ch::true
+rai_5:Rai 5::ch::true
+rai_movie:Rai Movie::ch::true
+rai_premium:Rai Premium::ch::true
+rai_scuola:Rai Scuola::ch::true
+rai_sport:Rai Sport::ch::true
+rai_storia:Rai Storia::ch::true
+rai_yoyo:Rai Yoyo::ch::true
+raigulp:Rai Gulp::ch::true
+rainews:RAI News 24::ch::true
+rbb:rbb Berlin:at:ch:de:true
+rbb-brandenburg:rbb Brandenburg:::de:true
+real_time_it:Real Time::ch::true
+red_bull_tv_dach_int:Red Bull TV German:at::de:true
+red_bull_tv_eu_int:Red Bull TV English::ch::true
+regio_tv_schwaben_de:Regio TV:::de:true
+rete-4:Rete 4 HD::ch::true
+rfo_de:RFO:::de:true
+rheinlokal_de:rheinlOKal HD:::de:true
+ric:RiC:at:ch:de:true
+rmcdecouverte:RMC Découverte::ch::true
+rocketbeans:Rocket Beans TV HD:at:ch:de:true
+rougetv:CARAC 1::ch::true
+rsi-la1:RSI La1 HD::ch::true
+rsi-la2:RSI La2 HD::ch::true
+rtl:RTL HD::ch::true
+rtl-2:RTL Zwei HD::ch::true
+rtl102_5:RTL 102.5::ch::true
+rtl2_austria:RTL Zwei Österreich HD:at:::true
+rtl2_deutschland:RTL Zwei Deutschland HD:::de:true
+rtl_austria:RTL Österreich HD:at:::true
+rtl_bayern_de:RTL Bayern HD:::de:true
+rtl_deutschland:RTL Deutschland HD:::de:true
+rtl_hb_nds_de:RTL Bremen/Niedersachsen HD:::de:true
+rtl_hessen_de:RTL Hessen HD:::de:true
+rtl_hh_sh_de:RTL Hamburg/Schleswig-Holstein HD:::de:true
+rtl_nrw_de:RTL NRW HD:::de:true
+rtl_plus:RTLup HD::ch:de:true
+rtl_plus_at:RTLup HD:at:::true
+rtl_ron_de:RTL Rhein-Odenwald-Neckar HD:::de:true
+rtlnitro:NITRO HD::ch::true
+rtlnitro_austria:NITRO HD:at:::true
+rtlnitro_de:NITRO HD:::de:true
+s1:S1 HD::ch::true
+s4c:S4C HD::ch::true
+saarland_fernsehen1:Saarland Fernsehen 1:::de:true
+sachsen_eins_de:SachsenEins HD:::de:true
+sachsen_fernsehen_chemnitz_de:Sachsen Fernsehen Chemnitz HD:::de:true
+sachsen_fernsehen_dresden_de:Sachsen Fernsehen Dresden HD:::de:true
+sachsen_fernsehen_leipzig_de:Sachsen Fernsehen Leipzig HD:::de:true
+sachsen_fernsehen_vogtland_de:Sachsen Fernsehen Vogtland HD:::de:true
+sat1:Sat.1 Schweiz HD::ch::true
+sat1_austria:Sat.1 Österreich HD:at:::true
+sat1_deutschland:Sat.1 Deutschland HD:::de:true
+sat1_gold_ch:SAT.1 Gold HD::ch::true
+sat1gold:SAT.1 Gold HD:::de:true
+sat1gold_austria:SAT.1 Gold HD:at:::true
+schau_tv_at:Kurier TV:at:::true
+schlager_deluxe_de:Schlager Deluxe:at:ch:de:true
+servus_tv:Servus TV Deutschland HD::ch:de:true
+servus_tv_austria:Servus TV Österreich HD:at:::true
+sf-1:SRF 1 HD::ch::true
+sf-2:SRF zwei HD::ch::true
+sf-info:SRF info HD::ch::true
+sf-info-intl:SRF info HD:at::de:true
+sixx_austria:Sixx HD:at:::true
+sixx_deutschland:Sixx HD:::de:true
+sky_tg24_it:Sky TG24::ch::true
+skynews-intl:Sky News::ch::true
+sonlife:SONLife::ch:de:true
+sonnenklartv:Sonnenklar TV:::de:true
+spiegel_tv_konflikte_de:Spiegel TV Konflikte:at:ch:de:true
+sportitalia_it:Sportitalia::ch::true
+sr-fernsehen:SR Fernsehen:at:ch:de:true
+starke_frauen_de:Starke Frauen:at:ch:de:true
+startv:Star TV HD::ch::true
+stimmungsgarten_tv_at:Stimmungsgarten TV :at:ch:de:true
+strongman_champions_league_de:Strongman Champions League:at:ch:de:true
+super-rtl:Super RTL Schweiz HD::ch::true
+super_it:Super!::ch::true
+super_rtl_austria:Super RTL Österreich HD:at:::true
+super_rtl_deutschland:Super RTL Deutschland HD:::de:true
+supertennis_it:SuperTennis HD::ch::true
+swiss_1:Swiss 1 HD::ch::true
+swiss_sport_tv_ch:Swiss Sport TV HD::ch::true
+swr-fernsehen-bw:SWR BW ::ch:de:true
+swr-fernsehen-rp:SWR RP:at::de:true
+sylt_1_de:Sylt1:::de:true
+tele-5:TELE 5 HD::ch:de:true
+tele1:Tele 1 HD::ch::true
+tele_d_ch:Tele D::ch::true
+tele_top:Tele Top HD::ch::true
+telebaern:TeleBärn HD::ch::true
+telebasel:TeleBasel HD::ch::true
+telebielingue:TeleBielingue HD::ch::true
+telem1:Tele M1 HD::ch::true
+teleostschweiz:TVO::ch::true
+telepace:Telepace HD::ch::true
+telesuedostschweiz:TeleSüdostschweiz HD::ch::true
+teleticino:TeleTicino HD::ch::true
+telezueri:Telezüri::ch::true
+tempora_tv_de:TemporaTV:at:ch:de:true
+terra_mater_wild_de:Terra Mater Wild:at:ch:de:true
+tf1:TF1 HD::ch::true
+tgcom24_it:TGcom24::ch::true
+thats_60s_uk:That's 60s::ch::true
+thats_70s_uk:That's 70s::ch::true
+thats_80s_uk:That's 80s::ch::true
+thats_tv_uk:That's TV::ch::true
+the_box:The Box::ch::true
+tlc:TLC HD::ch:de:true
+tmc:TMC::ch::true
+toggo_plus:TOGGO plus HD::ch:de:true
+top_filme_de:Top Filme:at:ch:de:true
+top_true_crime_de:Top True Crime:at:ch:de:true
+topcrime_it:TOPcrime::ch::true
+trace_vault_uk:Trace Vault::ch::true
+tsr1:RTS un HD::ch::true
+tsr2:RTS deux HD::ch::true
+tv2000_it:TV2000::ch::true
+tv24:TV24 HD::ch::true
+tv25:TV25 HD::ch::true
+tv5-monde:TV5 Monde::ch::true
+tv5mondefbs:TV5 Monde FBS::ch::true
+tv8-mont-blanc:TV8 Mont-Blanc HD::ch::true
+tv_berlin_de:TV Berlin:::de:true
+tv_ingolstadt_de:TV Ingolstadt:::de:true
+tv_mainfranken_de:TV Mainfranken:::de:true
+tv_oberfranken_de:TV Oberfranken:::de:true
+tv_oberwallis:Oberwallis TV::ch::true
+tv_suisse_plus_ch:CARAC 4::ch::true
+tva_ostbayern_de:TVA:::de:true
+tve:TVE HD::ch::true
+tvm3:TVM3::ch::true
+uatv_ua:UATV:at:ch:de:true
+uninettuno_it:UniNettuno University TV::ch::true
+vh1_it:VH1 Italia::ch::true
+vox:VOX HD::ch::true
+vox_austria:Vox Österreich HD:at:::true
+vox_deutschland:Vox Deutschland HD:::de:true
+vox_up_de:VOXup HD::ch:de:true
+w24_at:W24:at:::true
+w9suisse:W9 Suisse::ch::true
+warner_tv_it:Warner TV Italy HD::ch::true
+wdr-aachen:WDR Aachen:::de:true
+wdr-bielefeld:WDR Bielefeld:::de:true
+wdr-bonn:WDR Bonn:::de:true
+wdr-dortmund:WDR Dortmund:::de:true
+wdr-duesseldorf:WDR Düsseldorf:::de:true
+wdr-duisburg:WDR Duisburg:::de:true
+wdr-essen:WDR Essen:::de:true
+wdr-koeln:WDR Köln:at:ch:de:true
+wdr-muenster:WDR Muenster:::de:true
+wdr-siegen:WDR Siegen:::de:true
+wdr-wuppertal:WDR Wuppertal:::de:true
+wedo_big_docs_de:wedo big docs:at:ch:de:true
+wedo_movies_de:wedo movies:at:ch:de:true
+wedo_sports_de:wedo sports:at:ch:de:true
+weltderwunder:Welt der Wunder:at:ch:de:true
+wetter_tv:wetter.tv::ch::true
+wion_int:WION HD::ch::true
+wip:DF1::ch:de:true
+wir_24_tv_de:WIR24 TV:at::de:true
+yesterday_uk:Yesterday::ch::true
+zdf:ZDF HD:at:ch:de:true
+zdf-info:ZDFinfo HD:at:ch:de:true
+zdfneo:ZDFneo HD:at:ch:de:true
+zueriplus:Tele Z::ch::true
+zwei_music_television_de:Zwei Music Television:at:ch:de:true
